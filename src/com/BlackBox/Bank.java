@@ -14,8 +14,10 @@ public class Bank
     {
         return account.getBalance() > requestedAmount;
     } 
-    public Account getAccount()
+    
+    public void addBalance(double amountToAdd)
     {
-        return this.account;
+        account.addBalance(amountToAdd);
     }
+
 }

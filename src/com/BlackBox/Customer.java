@@ -4,7 +4,7 @@ package src.com.BlackBox;
 public class Customer
 {
 
-    private Account account;
+    public Account account;
     private String name;
     private String state;
     private String city;
@@ -21,17 +21,13 @@ public class Customer
 
 
 
-    public Account getAccount()
-    {
-        return this.account;
-    }
+
 
 
     public String getName()
     {
         return name;
     }
-
     public void setName(String name)
     {
         this.name = name;
@@ -42,7 +38,6 @@ public class Customer
     {
         return state;
     }
-
     public void setState(String state)
     {
         this.state = state;
@@ -53,7 +48,6 @@ public class Customer
     {
         return city;
     }
-
     public void setCity(String city)
     {
         this.city = city;
@@ -64,20 +58,27 @@ public class Customer
     {
         return phoneNumber;
     }
-
     public void setPhoneNumber(String phoneNumber)
     {
         this.phoneNumber = phoneNumber;
     }
 
 
-
-
+    //operations that are about the customer's account
     public boolean enoughBalance(int requestedAmount)
     {
         return this.account.getBalance() > requestedAmount;
 
     }
+    public void addBalance(double amountToAdd)
+    {
+        this.account.addBalance(amountToAdd);
+    }
+    public String getAccountNumber()
+    {
+        return this.account.getAccountNumber();
+    }
+    
 
 
 }

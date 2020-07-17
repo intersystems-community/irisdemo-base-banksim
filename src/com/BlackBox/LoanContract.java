@@ -1,7 +1,7 @@
 package src.com.BlackBox;
 
-import java.util.Date;
-
+import java.util.Calendar;
+ 
 public class LoanContract
 {
     private Customer borrower;
@@ -19,9 +19,9 @@ public class LoanContract
 
     }
 
-    public boolean dueToday(Date currentDate)
+    public boolean dueToday(Calendar currentCalendarDate)
     {
-        return currentDate.getDate() == this.dayDue;
+        return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dayDue;
     }
 
     public static boolean feasibleLoan(int amount)
@@ -33,8 +33,8 @@ public class LoanContract
     {
         if (borrower.enoughBalance(paymentSize))
         {
-            borrower.getAccount().addBalance(-paymentSize);
-            bank.getAccount().addBalance(paymentSize);
+            borrower.addBalance(-paymentSize);
+            bank.addBalance(paymentSize);
             amountOwed-=paymentSize;
             return true;
         }
@@ -44,6 +44,11 @@ public class LoanContract
     public boolean isComplete()
     {
         return (int)amountOwed == 0;
+    }
+
+    public String getBorrowerAccount()
+    {
+        return borrower.getAccountNumber();
     }
 
 
