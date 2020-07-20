@@ -17,6 +17,7 @@ public class Customer
         this.state = state;
         this.account = account;
         this.phoneNumber = phoneNumber;
+        this.city = city;
     }
 
 
@@ -65,7 +66,7 @@ public class Customer
 
 
     //operations that are about the customer's account
-    public boolean enoughBalance(int requestedAmount)
+    public boolean enoughBalance(float requestedAmount)
     {
         return this.account.getBalance() > requestedAmount;
 
@@ -79,6 +80,8 @@ public class Customer
         return this.account.getAccountNumber();
     }
     
+
+   
 
 
 }

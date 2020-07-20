@@ -10,7 +10,7 @@ public class Bank
         this.account = new Account(initialMoney, accountNumber);
     }
 
-    public boolean enoughBalance(int requestedAmount)
+    public boolean enoughBalance(float requestedAmount)
     {
         return account.getBalance() > requestedAmount;
     } 

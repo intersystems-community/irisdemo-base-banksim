@@ -4,10 +4,10 @@ public class Account
 {
 
     private String accountNumber;
-    private double balance;
+    private float balance;
 
 
-    public Account(double balance, String accountNumber)
+    public Account(float balance, String accountNumber)
     {
         this.balance = balance;
         this.accountNumber = accountNumber;
@@ -16,7 +16,7 @@ public class Account
 
 
 
-    public double getBalance() {
+    public float getBalance() {
         return balance;
     }
 
