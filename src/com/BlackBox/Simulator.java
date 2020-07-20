@@ -21,7 +21,7 @@ public class Simulator {
     private LinkedList<Event> eventQueue = new LinkedList<>();
     private boolean loansChecked;
 
-    private String[] eventTypes = { "payment", "loan" };
+    private String[] eventTypes = { "payment", "loan","demographics" };
 
     public Simulator(int amountDays, int amountEvents, int amountCustomers) {
 
@@ -41,7 +41,7 @@ public class Simulator {
             String city = Util.getRandomCity();
             String phoneNumber = Util.getRandomPhoneNumber();
 
-            Account customerAccount = new Account(Math.random() * 100000,
+            Account customerAccount = new Account((float)(Math.random() * 100000),
                     accountNumber.substring(accountNumber.length() - 8));
             allCustomers[i] = new Customer(customerAccount, name, state, city, phoneNumber);
         }
@@ -50,6 +50,9 @@ public class Simulator {
 
     }
 
+    
+    
+    
     public Event next()
     {
         //advance current time to current system time, but for the current date.
@@ -92,27 +95,35 @@ public class Simulator {
                 //CREATE NEW TRANSFER EVENT FROM BANK TO PERSON
                 //ADD TRANSFER EVENT TO EVENTQUEUE
                 //RETURN LOAN EVENT
-                return null;
-                break;
+                Customer customerLoanTaker = allCustomers[(int)(Math.random()*(allCustomers.length-1))];
+                float randomAmount = (float)(Math.random() * 10000);
+                return loanEventMaker(customerLoanTaker, randomAmount);
+            
                     
 
                 //Payment
                 case 2:
+
                 //CREATE NEW TRANSFER EVENT FROM PERSON1 TO PERSON2
-                //RETURN TRANSFER EVENT
                 Customer customerRecipient = allCustomers[(int)(Math.random()*(allCustomers.length-1))];
                 Customer customerSender = allCustomers[(int)(Math.random()*(allCustomers.length-1))];
-                if (customerSender.getAccountNumber() == customerRecipient.getAccountNumber())
+
+                //Make sure customers are different
+                while (customerRecipient == customerSender)
                 {
-                    return next();
+                    customerSender = allCustomers[(int)(Math.random()*(allCustomers.length-1))];
                 }
-                else
-                {
-                    float amount = Util.getRandomTransferAmount(customerSender);
-                    Event transferEvent = customerSender.transfer(customerRecipient, amount);
-                    return transferEvent;
-                }
-                break;
+                return transferEventMaker(customerSender, customerRecipient);
+                
+                
+
+                //Demographics change
+                case 3:
+                //CREATE NEW DEMOGRAPHICS CHANGE EVENT
+
+                //RETURN DEMOGRAPHICS CHANGE EVENT
+                Customer customerDemographics = allCustomers[(int)(Math.random()*(allCustomers.length-1))];
+                return demographicsEventMaker(customerDemographics);
 
                 
 
@@ -152,7 +163,7 @@ public class Simulator {
                     }
                     else
                     {
-                        //ADD LOAN FAIL PAYMENT EVENT TO QUEUE
+                        //ADD LOAN FAIL PAYMENT EVENT TO QUEUE???
                     }
                 }
             }
@@ -160,6 +171,70 @@ public class Simulator {
         }
     }
 
+
+    public Event loanEventMaker(Customer loanee, float amount)
+    {
+        //Check if bank can make a loan of this amount. Otherwise LOAN failed event
+        if (bank.enoughBalance(amount))
+        {
+            //2 Events. Loan Created, Loan Made (transfer). 
+
+            //First, create the loan event that is sent out to the system
+            Event loanEvent = new Event(currentCalendarDate, "Loan Created from Bank to: " + loanee.getAccountNumber());
+            //Second, add to the eventqueue a transfer event from the bank to the customer.
+            bank.addBalance(-amount);
+            loanee.addBalance(amount);
+            Event loanTransfer = new Event(currentCalendarDate, "Loan of "+amount+"made to account#" + loanee.getAccountNumber());
+            eventQueue.add(loanTransfer);
+            return loanEvent;
+        }
+        else
+        {
+            //Make a loan failure event here.
+
+        }
+
+    }
+
+    public Event transferEventMaker(Customer sender, Customer receiver)
+    {
+        
+        float amount = Util.getRandomTransferAmount(sender);
+                    
+        //Verify if transfer is doable. If so, create and return the transfer event. Otherwise, maybe take a loan and make the transfer.
+        if(sender.enoughBalance(amount))
+        {
+            sender.addBalance(-amount);
+            receiver.addBalance(amount);
+            Event transferEvent = new Event(currentCalendarDate, "transfer between :" );
+            return transferEvent;
+        }
+        else
+        {
+            //making it a 10% chance the person takes the loan
+            double chanceLoan = 1.0/10.0;
+            if(Math.random() < chanceLoan)
+            {  
+                
+
+
+            }
+            else
+            {
+                return next();
+            }
+        }
+
+    }
+
+
+    public Event demographicsEventMaker(Customer customerDemographicsChange)
+    {
+
+    }
+
+
+    //UTILITY CLASSES TO DEAL WITH PASSAGE OF TIME
     //Starts a new day
     public void newDay()
     {
@@ -183,10 +258,13 @@ public class Simulator {
 
 
 
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
