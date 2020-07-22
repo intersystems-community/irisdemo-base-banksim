@@ -6,22 +6,24 @@ import java.util.ListIterator;
 
 
 
+
 public class Simulator {
     public Customer[] allCustomers;
     public Bank bank;
-    private final LinkedList<LoanContract> loansList = new LinkedList<>();
-    private final Calendar currentCalendarDate;
-    private final int eventsPerDay;
+    private LinkedList<LoanContract> loansList = new LinkedList<>();
+    private Calendar currentCalendarDate;
+    private int eventsPerDay;
     private int totalEvents;
-    private final int numberOfEventsAll;
+    private int numberOfEventsAll;
     private int currentEventsDay = 0;
-    private final LinkedList<Event> eventQueue = new LinkedList<>();
+    private LinkedList<Event> eventQueue = new LinkedList<>();
     private boolean loansChecked;
+    private double probabilityTransfer = .45;
+    private double probabilityDemographics = .45;
 
-    private final String[] eventTypes = { "payment", "loan", "demographics" };
-    private final String[] demographics = { "State", "City", "Phone Number" };
+    private String[] demographics = { "State", "City", "Phone Number" };
 
-    public Simulator(final int amountDays, final int amountEvents, final int amountCustomers) {
+    public Simulator(int amountDays, int amountEvents, int amountCustomers) {
 
         // initialize state machine
         currentCalendarDate = Calendar.getInstance();
@@ -33,13 +35,13 @@ public class Simulator {
         // initial state for Customers/Bank/Accounts/Loans
         // customers
         for (int i = 1; i <= amountCustomers; i++) {
-            final String accountNumber = String.format("%07d", i);
-            final String name = Util.getRandomName();
-            final String state = Util.getRandomState();
-            final String city = Util.getRandomCity();
-            final String phoneNumber = Util.getRandomPhoneNumber();
+            String accountNumber = String.format("%07d", i);
+            String name = Util.getRandomName();
+            String state = Util.getRandomState();
+            String city = Util.getRandomCity();
+            String phoneNumber = Util.getRandomPhoneNumber();
 
-            final Account customerAccount = new Account((float) (Math.random() * 100000),
+            Account customerAccount = new Account((float) (Math.random() * 100000),
                     accountNumber.substring(accountNumber.length() - 8));
             allCustomers[i] = new Customer(customerAccount, name, state, city, phoneNumber);
         }
@@ -81,43 +83,44 @@ public class Simulator {
         // we'll do.
         else {
             // Randomly choose what type of event will be made.
-            switch ((int) (Math.random() * (eventTypes.length - 1))) {
-                // Loan
-                case 1:
-                    // CREATE LOAN EVENT
-                    // CREATE NEW TRANSFER EVENT FROM BANK TO PERSON
-                    // ADD TRANSFER EVENT TO EVENTQUEUE
-                    // RETURN LOAN EVENT
-                    final Customer customerLoanTaker = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
-                    final float randomAmount = (float) (Math.random() * 10000);
-                    return loanEventMaker(customerLoanTaker, randomAmount);
 
-                // Payment
-                case 2:
+            //SHOULD CHANGE THIS TO GIVE MORE WEIGHT TO DEMOGRAPHICS AND TRANSFERS
+            double randomChoice = Math.random();
 
-                    // CREATE NEW TRANSFER EVENT FROM PERSON1 TO PERSON2
-                    final Customer customerRecipient = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
-                    Customer customerSender = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+            if (randomChoice <=probabilityDemographics)
+            {
+                // CREATE NEW DEMOGRAPHICS CHANGE EVENT
 
-                    // Make sure customers are different
-                    while (customerRecipient == customerSender) {
-                        customerSender = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
-                    }
-                    return transferEventMaker(customerSender, customerRecipient);
-
-                // Demographics change
-                case 3:
-                    // CREATE NEW DEMOGRAPHICS CHANGE EVENT
-
-                    // RETURN DEMOGRAPHICS CHANGE EVENT
-                    final Customer customerDemographics = allCustomers[(int) (Math.random()
-                            * (allCustomers.length - 1))];
-                    return demographicsEventMaker(customerDemographics);
-
-                default:
-                    return next();
+                // RETURN DEMOGRAPHICS CHANGE EVENT
+                Customer customerDemographics = allCustomers[(int) (Math.random()
+                        * (allCustomers.length - 1))];
+                return demographicsEventMaker(customerDemographics);
 
             }
+            else if (randomChoice <= probabilityDemographics+probabilityTransfer)
+            {
+                // CREATE NEW TRANSFER EVENT FROM PERSON1 TO PERSON2
+                Customer customerRecipient = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+                Customer customerSender = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+
+                // Make sure customers are different
+                while (customerRecipient == customerSender) {
+                    customerSender = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+                }
+                return transferEventMaker(customerSender, customerRecipient);
+            }
+            else
+            {
+                // CREATE LOAN EVENT
+                // CREATE NEW TRANSFER EVENT FROM BANK TO PERSON
+                // ADD TRANSFER EVENT TO EVENTQUEUE
+                // RETURN LOAN EVENT
+                Customer customerLoanTaker = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+                float randomAmount = (float) (Math.random() * 10000);
+                return loanEventMaker(customerLoanTaker, randomAmount); 
+
+            }
+           
 
         }
 
@@ -127,15 +130,15 @@ public class Simulator {
 
         // Once a day, go over every loan and check if they're due.
         if (!loansChecked) {
-            final ListIterator<LoanContract> loanIterator = loansList.listIterator();
+            ListIterator<LoanContract> loanIterator = loansList.listIterator();
             while (loanIterator.hasNext()) {
-                final LoanContract loan = loanIterator.next();
+                LoanContract loan = loanIterator.next();
                 if (loan.dueToday(currentCalendarDate)) {
 
                     loan.makePayment();
 
                     // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
-                    final TransferEvent paymentEvent = new TransferEvent(currentCalendarDate, loan.getBorrower(), bank,
+                    TransferEvent paymentEvent = new TransferEvent(currentCalendarDate, loan.getBorrower(), bank,
                             loan.getPaymentSize());
                     eventQueue.add(paymentEvent);
 
@@ -151,17 +154,17 @@ public class Simulator {
         }
     }
 
-    public Event loanEventMaker(final Customer loanee, final float amount) {
+    public Event loanEventMaker(Customer loanee, float amount) {
         // Check if bank can make a loan of this amount. Otherwise LOAN failed event
         if (bank.enoughBalance(amount)) {
             // 2 Events. Loan Created, Loan Made (transfer).
 
             // First, create the loan event that is sent out to the system
-            final LoanContractEvent loanEvent = new LoanContractEvent(currentCalendarDate, loanee, amount);
+            LoanContractEvent loanEvent = new LoanContractEvent(currentCalendarDate, loanee, amount);
             // Second, add to the eventqueue a transfer event from the bank to the customer.
             bank.addBalance(-amount);
             loanee.addBalance(amount);
-            final TransferEvent loanTransfer = new TransferEvent(currentCalendarDate, bank, loanee, amount);
+            TransferEvent loanTransfer = new TransferEvent(currentCalendarDate, bank, loanee, amount);
             eventQueue.add(loanTransfer);
             totalEvents++;
             currentEventsDay++;
@@ -174,16 +177,16 @@ public class Simulator {
 
     }
 
-    public Event transferEventMaker(final Customer sender, final Customer receiver) {
+    public Event transferEventMaker(Customer sender, Customer receiver) {
 
-        final float amount = Util.getRandomTransferAmount(sender);
+        float amount = Util.getRandomTransferAmount(sender);
 
         // Verify if transfer is doable. If so, create and return the transfer event.
         // Otherwise, maybe take a loan and make the transfer.
         if (sender.enoughBalance(amount)) {
             sender.addBalance(-amount);
             receiver.addBalance(amount);
-            final TransferEvent transferEvent = new TransferEvent(currentCalendarDate, sender, receiver, amount);
+            TransferEvent transferEvent = new TransferEvent(currentCalendarDate, sender, receiver, amount);
             totalEvents++;
             currentEventsDay++;
             return transferEvent;
@@ -194,8 +197,8 @@ public class Simulator {
 
     }
 
-    public Event demographicsEventMaker(final Customer customerDemographicsChange) {
-        final int choice = (int) (Math.random() * (demographics.length - 1));
+    public Event demographicsEventMaker(Customer customerDemographicsChange) {
+        int choice = (int) (Math.random() * (demographics.length - 1));
         String newDemo;
         switch (demographics[choice]) {
             case "State":
@@ -235,7 +238,7 @@ public class Simulator {
 
     // advance time in current day
     public void advanceTime() {
-        final long currentMillis = System.currentTimeMillis();
+        long currentMillis = System.currentTimeMillis();
         currentCalendarDate.set(Calendar.SECOND, (int)currentMillis/1000);
         currentCalendarDate.set(Calendar.MINUTE, (int)(currentMillis/1000)/60);
         currentCalendarDate.set(Calendar.HOUR, (int)((currentMillis/1000)/60)/60);
