@@ -4,13 +4,13 @@ import java.util.Calendar;
  
 public class LoanContract
 {
-    private Customer borrower;
-    private int amountOwed;
-    private int paymentSize;
+    public Customer borrower;
+    private float amountOwed;
+    private float paymentSize;
     public static Bank bank;
     public int dayDue;
 
-    public LoanContract(Customer borrower, int initialAmount, int dayDue, int paymentSize)
+    public LoanContract(Customer borrower, float initialAmount, int dayDue, float paymentSize)
     {
         this.borrower=borrower;
         this.amountOwed=initialAmount;
@@ -24,21 +24,18 @@ public class LoanContract
         return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dayDue;
     }
 
-    public static boolean feasibleLoan(int amount)
+    public static boolean feasibleLoan(float amount)
     {
         return bank.enoughBalance(amount);
     }
 
-    public boolean makePayment()
+    public void makePayment()
     {
-        if (borrower.enoughBalance(paymentSize))
-        {
-            borrower.addBalance(-paymentSize);
-            bank.addBalance(paymentSize);
-            amountOwed-=paymentSize;
-            return true;
-        }
-        return false;
+       
+        borrower.addBalance(-paymentSize);
+        bank.addBalance(paymentSize);
+        amountOwed-=paymentSize;
+        
     }
 
     public boolean isComplete()
@@ -50,6 +47,18 @@ public class LoanContract
     {
         return borrower.getAccountNumber();
     }
+
+    public float getPaymentSize()
+    {
+        return paymentSize;
+    }
+
+    public Customer getBorrower()
+    {
+        return borrower;
+    }
+
+
 
 
 }
