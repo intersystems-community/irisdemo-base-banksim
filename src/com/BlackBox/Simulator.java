@@ -1,6 +1,7 @@
 package src.com.BlackBox;
 
 import java.util.Calendar;
+import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
@@ -138,9 +139,17 @@ public class Simulator {
                     loan.makePayment();
 
                     // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
+                    try
+                    {
                     TransferEvent paymentEvent = new TransferEvent(currentCalendarDate, loan.getBorrower(), bank,
                             loan.getPaymentSize());
                     eventQueue.add(paymentEvent);
+                    }
+                    catch(InputMismatchException e)
+                    {
+                        System.out.println("WRONG INPUT TYPE FOR SENDER OR RECEIVER");
+                    }
+                    
 
                     // if the loan has been succesfully paid off, remove it from the loan Linked
                     // List and make a Loan Complete Event
@@ -162,13 +171,22 @@ public class Simulator {
             // First, create the loan event that is sent out to the system
             LoanContractEvent loanEvent = new LoanContractEvent(currentCalendarDate, loanee, amount);
             // Second, add to the eventqueue a transfer event from the bank to the customer.
-            bank.addBalance(-amount);
-            loanee.addBalance(amount);
-            TransferEvent loanTransfer = new TransferEvent(currentCalendarDate, bank, loanee, amount);
-            eventQueue.add(loanTransfer);
-            totalEvents++;
-            currentEventsDay++;
-            return loanEvent;
+            
+            try
+            {
+                bank.addBalance(-amount);
+                loanee.addBalance(amount);
+                TransferEvent loanTransfer = new TransferEvent(currentCalendarDate, bank, loanee, amount);
+                eventQueue.add(loanTransfer);
+                totalEvents++;
+                currentEventsDay++;
+                return loanEvent;
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println("WRONG INPUT TYPE FOR SENDER OR RECEIVER");
+                return next();
+            }
         } else {
             // if the bank doesnt have enough money, try another event
             return next();
@@ -184,12 +202,21 @@ public class Simulator {
         // Verify if transfer is doable. If so, create and return the transfer event.
         // Otherwise, maybe take a loan and make the transfer.
         if (sender.enoughBalance(amount)) {
-            sender.addBalance(-amount);
-            receiver.addBalance(amount);
-            TransferEvent transferEvent = new TransferEvent(currentCalendarDate, sender, receiver, amount);
-            totalEvents++;
-            currentEventsDay++;
-            return transferEvent;
+            try
+            {
+                sender.addBalance(-amount);
+                receiver.addBalance(amount);
+                TransferEvent transferEvent = new TransferEvent(currentCalendarDate, sender, receiver, amount);
+                totalEvents++;
+                currentEventsDay++;
+                return transferEvent;
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println("WRONG INPUT TYPE FOR SENDER OR RECEIVER");
+                return next();
+            }
+
         } else {
             // if there's no money, just try another event
             return next();
@@ -199,21 +226,25 @@ public class Simulator {
 
     public Event demographicsEventMaker(Customer customerDemographicsChange) {
         int choice = (int) (Math.random() * (demographics.length - 1));
-        String newDemo;
+        String prevValue;
+        String newValue;
         switch (demographics[choice]) {
             case "State":
-                newDemo = Util.getRandomState();
-                customerDemographicsChange.setState(newDemo);
+                prevValue = customerDemographicsChange.getState();
+                newValue = Util.getRandomState();
+                customerDemographicsChange.setState(newValue);
                 break;
 
             case "City":
-                newDemo = Util.getRandomCity();
-                customerDemographicsChange.setCity(newDemo);
+                prevValue = customerDemographicsChange.getCity();
+                newValue = Util.getRandomCity();
+                customerDemographicsChange.setCity(newValue);
                 break;
 
             case "Phone Number":
-                newDemo = Util.getRandomPhoneNumber();
-                customerDemographicsChange.setPhoneNumber(newDemo);
+                prevValue = customerDemographicsChange.getPhoneNumber();
+                newValue = Util.getRandomPhoneNumber();
+                customerDemographicsChange.setPhoneNumber(newValue);
                 break;
 
             default:
@@ -221,7 +252,7 @@ public class Simulator {
         }
         totalEvents++;
         currentEventsDay++;
-        return new DemographicsEvent(currentCalendarDate, customerDemographicsChange, demographics[choice]);
+        return new DemographicsEvent(currentCalendarDate, customerDemographicsChange, demographics[choice], prevValue, newValue);
 
     }
 

@@ -18,5 +18,15 @@ public class LoanContractEvent implements Event {
     {
         return dateCreated;
     }
+
+    public Customer getCustomer()
+    {
+        return customer;
+    }
+
+    public float getAmountLoaned()
+    {
+        return amountLoaned;
+    }
     
 }

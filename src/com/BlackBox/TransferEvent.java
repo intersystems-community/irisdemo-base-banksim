@@ -1,43 +1,63 @@
 package src.com.BlackBox;
 
 import java.util.Calendar;
+import java.util.InputMismatchException;
+
 
 public class TransferEvent implements Event{
     
     public Calendar dateCreated;
-    public Bank bank;
-    public Customer receiver;
-    public Customer sender;
+    public Object receiver;
+    public Object sender;
     public float amount;
 
-    public TransferEvent(Calendar dateCreated, Customer sender, Customer receiver, float amount)
+    public TransferEvent(Calendar dateCreated, Object sender, Object receiver, float amount) throws InputMismatchException
     {
+
+        //Throws Exception if object type is incorrect. Want to allow multiple object types withour repeating code.
+        if(sender instanceof Customer || sender instanceof Bank)
+        {
+            this.sender = sender;
+        }
+        else
+        {
+            throw new InputMismatchException();
+        }
+        if(receiver instanceof Customer || receiver instanceof Bank)
+        {
+            this.receiver = receiver;
+        }
+        else
+        {
+            throw new InputMismatchException();
+        }
+
         this.dateCreated = dateCreated;
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
     }
 
-    public TransferEvent(Calendar dateCreated, Bank bank, Customer receiver, float amount)
-    {
-        this.dateCreated = dateCreated;
-        this.bank = bank;
-        this.receiver = receiver;
-        this.amount = amount;
-    }
-
-    public TransferEvent(Calendar dateCreated, Customer sender, Bank bank, float amount)
-    {
-        this.dateCreated = dateCreated;
-        this.bank = bank;
-        this.bank = bank;
-        this.amount = amount;
-    }
 
 
     public Calendar getDate()
     {
         return dateCreated;
+    }
+    public Object getSender()
+    {
+        return sender;
+
+        
+    }
+    public Object getReceiver()
+    {
+        return receiver;
+    }
+
+    public float getAmountSent()
+    {
+        return amount;
     }
     
 }
