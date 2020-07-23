@@ -1,5 +1,10 @@
 package src.com.BlackBox;
 
+import java.util.Calendar;
+import java.util.Scanner; 
+
+
+
 public class Test {
     public static void main(String [] args)
     {
@@ -10,10 +15,19 @@ public class Test {
 
         Simulator blackBox = new Simulator(amountDays, amountEvents, amountCustomers);
         Event event = blackBox.next();
+        Calendar day = event.getDate();
+        Scanner obj = new Scanner(System.in);
         while(event instanceof Event)
         {
             System.out.println(event.getInfo());
+            if (event.getDate().get(Calendar.DAY_OF_YEAR) != day.get(Calendar.DAY_OF_YEAR))
+            {
+                String a = obj.nextLine();
+            }
             event = blackBox.next();
+            
+            
+            
 
         }
 

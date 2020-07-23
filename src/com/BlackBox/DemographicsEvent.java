@@ -13,7 +13,7 @@ public class DemographicsEvent implements Event {
 
     public DemographicsEvent(Calendar dateCreated, Customer customer, String demographicsFieldChanged, String prevValue, String newValue)
     {
-        this.dateCreated = dateCreated;
+        this.dateCreated = (Calendar)dateCreated.clone();;
         this.customer = customer;
         this.demographicsField = demographicsFieldChanged;
         this.prevValue = prevValue;
@@ -47,7 +47,7 @@ public class DemographicsEvent implements Event {
 
     public String getInfo()
     {
-        return "-----------------\nDEMOGRAPHIC EVENT \nDate: "+ getDate() + "\nCustomer: " + getCustomer() +"\nField: " + getField()+"\nPrevious: "
+        return "-----------------\nDEMOGRAPHIC EVENT \nDate: "+ getDate().getTime() + "\nCustomer: " + getCustomer() +"\nField: " + getField()+"\nPrevious: "
         + getPrevious() +"\nNew: " + getNew();
     }
 }

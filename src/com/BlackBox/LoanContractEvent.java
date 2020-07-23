@@ -9,7 +9,7 @@ public class LoanContractEvent implements Event {
 
     public LoanContractEvent(Calendar dateCreated, Customer customer, float amountLoaned)
     {
-        this.dateCreated = dateCreated;
+        this.dateCreated = (Calendar)dateCreated.clone();
         this.customer = customer;
         this.amountLoaned = amountLoaned;
     }
@@ -31,7 +31,7 @@ public class LoanContractEvent implements Event {
 
     public String getInfo()
     {
-        return "-----------------\nLOAN CONTRACT EVENT EVENT \nDate: "+ getDate() + "\nCustomer: " + getCustomer() +"\nAmount Loaned: " + getAmountLoaned();
+        return "-----------------\nLOAN CONTRACT EVENT EVENT \nDate: "+ getDate().getTime() + "\nCustomer: " + getCustomer() +"\nAmount Loaned: " + getAmountLoaned();
 
     }
 }

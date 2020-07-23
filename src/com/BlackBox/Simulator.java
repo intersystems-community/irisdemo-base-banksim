@@ -17,6 +17,7 @@ public class Simulator {
     private int totalEvents;
     private int numberOfEventsAll;
     private int currentEventsDay = 0;
+    private int millisBetweenEvent;
     private LinkedList<Event> eventQueue = new LinkedList<>();
     private boolean loansChecked;
     private double probabilityTransfer = .45;
@@ -32,6 +33,7 @@ public class Simulator {
         eventsPerDay = amountEvents / amountDays;
         numberOfEventsAll = amountEvents;
         allCustomers = new Customer[amountCustomers];
+        // millisBetweenEvent = 
 
         // initial state for Customers/Bank/Accounts/Loans
         // customers
@@ -259,20 +261,18 @@ public class Simulator {
     // UTILITY CLASSES TO DEAL WITH PASSAGE OF TIME
     // Starts a new day
     public void newDay() {
+        System.out.println("\nNEW DAY\n");
         currentEventsDay = 0;
         loansChecked = false;
-        currentCalendarDate.add(Calendar.DAY_OF_MONTH, 1);
-        currentCalendarDate.set(Calendar.HOUR_OF_DAY, 0);
-        currentCalendarDate.set(Calendar.MINUTE, 0);
-        currentCalendarDate.set(Calendar.SECOND, 0);
+        currentCalendarDate.add(Calendar.DAY_OF_YEAR, 1);
     }
 
     // advance time in current day
     public void advanceTime() {
         long currentMillis = System.currentTimeMillis();
-        currentCalendarDate.set(Calendar.SECOND, (int)currentMillis/1000);
-        currentCalendarDate.set(Calendar.MINUTE, (int)(currentMillis/1000)/60);
-        currentCalendarDate.set(Calendar.HOUR, (int)((currentMillis/1000)/60)/60);
+        int day = currentCalendarDate.get(Calendar.DAY_OF_YEAR);
+        currentCalendarDate.setTimeInMillis(currentMillis);
+        currentCalendarDate.set(Calendar.DAY_OF_YEAR, day);
     }
 
 

@@ -32,7 +32,7 @@ public class TransferEvent implements Event{
             throw new InputMismatchException();
         }
 
-        this.dateCreated = dateCreated;
+        this.dateCreated = (Calendar)dateCreated.clone();;
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
@@ -62,7 +62,7 @@ public class TransferEvent implements Event{
 
     public String getInfo()
     {
-        return "-----------------\nTRANSFER EVENT \nDate: "+ getDate() + "\nSender: " + getSender() +"\neceiver: " + getReceiver()+"\nAmount: "
+        return "-----------------\nTRANSFER EVENT \nDate: "+ getDate().getTime() + "\nSender: " + getSender() +"\neceiver: " + getReceiver()+"\nAmount: "
         + getAmountSent();
     }
     
