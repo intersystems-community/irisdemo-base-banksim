@@ -59,5 +59,11 @@ public class TransferEvent implements Event{
     {
         return amount;
     }
+
+    public String getInfo()
+    {
+        return "-----------------\nTRANSFER EVENT \nDate: "+ getDate() + "\nSender: " + getSender() +"\neceiver: " + getReceiver()+"\nAmount: "
+        + getAmountSent();
+    }
     
 }

@@ -44,4 +44,10 @@ public class DemographicsEvent implements Event {
     {
         return newValue;
     }
+
+    public String getInfo()
+    {
+        return "-----------------\nDEMOGRAPHIC EVENT \nDate: "+ getDate() + "\nCustomer: " + getCustomer() +"\nField: " + getField()+"\nPrevious: "
+        + getPrevious() +"\nNew: " + getNew();
+    }
 }

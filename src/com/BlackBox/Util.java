@@ -37,18 +37,18 @@ public class Util {
     }
 
     public static String getRandomName() {
-        final String name = FIRST_NAMES[(int) (Math.random() * (FIRST_NAMES.length - 1))] + " "
+        final String name = FIRST_NAMES[(int) Math.round(Math.random() * (FIRST_NAMES.length - 1))] + " "
                 + LAST_NAMES[(int) (Math.random() * (LAST_NAMES.length - 1))];
         return name;
     }
 
     public static String getRandomState() {
-        return STATES[(int) (Math.random() * (STATES.length - 1))];
+        return STATES[(int) Math.round(Math.random() * (STATES.length - 1))];
     }
 
     public static String getRandomCity() {
 
-        return CITY[(int) (Math.random() * (CITY.length - 1))];
+        return CITY[(int) Math.round(Math.random() * (CITY.length - 1))];
     }
 
     public static String getRandomPhoneNumber() {

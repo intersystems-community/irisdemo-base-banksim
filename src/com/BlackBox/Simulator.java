@@ -42,9 +42,8 @@ public class Simulator {
             String city = Util.getRandomCity();
             String phoneNumber = Util.getRandomPhoneNumber();
 
-            Account customerAccount = new Account((float) (Math.random() * 100000),
-                    accountNumber.substring(accountNumber.length() - 8));
-            allCustomers[i] = new Customer(customerAccount, name, state, city, phoneNumber);
+            Account customerAccount = new Account((float) (Math.random() * 100000), accountNumber);
+            allCustomers[i-1] = new Customer(customerAccount, name, state, city, phoneNumber);
         }
         // Bank
         bank = new Bank(10000000, "00000000");
@@ -101,12 +100,13 @@ public class Simulator {
             else if (randomChoice <= probabilityDemographics+probabilityTransfer)
             {
                 // CREATE NEW TRANSFER EVENT FROM PERSON1 TO PERSON2
-                Customer customerRecipient = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
-                Customer customerSender = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+                Customer customerRecipient = allCustomers[(int) Math.round(Math.random() * (allCustomers.length - 1))];
+                Customer customerSender = allCustomers[(int) Math.round(Math.random() * (allCustomers.length - 1))];
 
                 // Make sure customers are different
                 while (customerRecipient == customerSender) {
-                    customerSender = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+                    int other = (int)Math.round((Math.random() * (allCustomers.length - 1)));
+                    customerSender = allCustomers[other];
                 }
                 return transferEventMaker(customerSender, customerRecipient);
             }
@@ -116,7 +116,7 @@ public class Simulator {
                 // CREATE NEW TRANSFER EVENT FROM BANK TO PERSON
                 // ADD TRANSFER EVENT TO EVENTQUEUE
                 // RETURN LOAN EVENT
-                Customer customerLoanTaker = allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+                Customer customerLoanTaker = allCustomers[(int) Math.round(Math.random() * (allCustomers.length - 1))];
                 float randomAmount = (float) (Math.random() * 10000);
                 return loanEventMaker(customerLoanTaker, randomAmount); 
 
@@ -221,11 +221,11 @@ public class Simulator {
             // if there's no money, just try another event
             return next();
         }
-
+ 
     }
 
     public Event demographicsEventMaker(Customer customerDemographicsChange) {
-        int choice = (int) (Math.random() * (demographics.length - 1));
+        int choice = (int) Math.round(Math.random() * (demographics.length - 1));
         String prevValue;
         String newValue;
         switch (demographics[choice]) {
@@ -274,6 +274,7 @@ public class Simulator {
         currentCalendarDate.set(Calendar.MINUTE, (int)(currentMillis/1000)/60);
         currentCalendarDate.set(Calendar.HOUR, (int)((currentMillis/1000)/60)/60);
     }
+
 
 
 

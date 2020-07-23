@@ -28,5 +28,10 @@ public class LoanContractEvent implements Event {
     {
         return amountLoaned;
     }
-    
+
+    public String getInfo()
+    {
+        return "-----------------\nLOAN CONTRACT EVENT EVENT \nDate: "+ getDate() + "\nCustomer: " + getCustomer() +"\nAmount Loaned: " + getAmountLoaned();
+
+    }
 }

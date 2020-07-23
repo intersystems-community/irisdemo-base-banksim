@@ -6,6 +6,8 @@ public interface Event {
     
 public Calendar getDate();
 
+public String getInfo();
+
 
     
 }
