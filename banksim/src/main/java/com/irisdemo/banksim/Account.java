@@ -1,26 +1,26 @@
-package src.com.BlackBox;
+package com.irisdemo.banksim;
 
 public class Account
 {
-
+    private Customer customer;
     private String accountNumber;
-    private float balance;
+    private double balance;
 
 
-    public Account(float balance, String accountNumber)
+    public Account(Customer customer, String accountNumber, double balance)
     {
+        this.customer=customer;
         this.balance = balance;
         this.accountNumber = accountNumber;
     }
 
-
-
-
-    public float getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-
+    public Customer getCustomer() {
+        return this.customer;
+    }
 
     public void addBalance(double amount)
     {

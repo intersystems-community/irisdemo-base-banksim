@@ -1,4 +1,4 @@
-package src.com.BlackBox;
+package com.irisdemo.banksim;
 
 public class Util {
 
@@ -56,9 +56,9 @@ public class Util {
         return phoneNumber;
     }
 
-    public static float getRandomTransferAmount(final Customer loaner) {
-        final float maxAmount = loaner.account.getBalance();
+    public static double getRandomTransferAmount(final Customer customer) {
+        final double maxAmount = customer.account.getBalance();
         //getting random amount, multiplied by a Random number between 1 and 2 to allow for possibillity of asking for too much money.
-        return (float)((Math.random()*maxAmount)*(1.0+Math.random()));
+        return Math.random()*maxAmount;
     }
 }

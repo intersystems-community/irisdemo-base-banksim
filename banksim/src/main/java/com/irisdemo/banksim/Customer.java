@@ -1,4 +1,4 @@
-package src.com.BlackBox;
+package com.irisdemo.banksim;
 
 
 public class Customer
@@ -11,19 +11,33 @@ public class Customer
     private String phoneNumber;
 
     
-    public Customer(Account account, String name, String state, String city, String phoneNumber)
+    public Customer(String accountNumber, double initialMoney, String name, String state, String city, String phoneNumber)
     {
         this.name = name;
         this.state = state;
         this.account = account;
         this.phoneNumber = phoneNumber;
         this.city = city;
+
+        this.account = new Account(this, accountNumber, initialMoney);
     }
 
+    public void displayInfo(boolean verbose)
+    {
+        System.out.println("Name          : " + getName());
+        System.out.println("Account       : " + getAccount().getAccountNumber());
+        if (verbose)
+        {
+            System.out.println("State         : " + getState());
+            System.out.println("City          : " + getCity());
+            System.out.println("Phone         : " + getPhoneNumber());
+        }
+    }
 
-
-
-
+    public Account getAccount() 
+    {
+        return this.account;
+    }
 
     public String getName()
     {
@@ -34,7 +48,6 @@ public class Customer
         this.name = name;
     }
 
-
     public String getState()
     {
         return state;
@@ -43,7 +56,6 @@ public class Customer
     {
         this.state = state;
     }
-
 
     public String getCity()
     {
@@ -54,7 +66,6 @@ public class Customer
         this.city = city;
     }
 
-
     public String getPhoneNumber()
     {
         return phoneNumber;
@@ -64,9 +75,8 @@ public class Customer
         this.phoneNumber = phoneNumber;
     }
 
-
     //operations that are about the customer's account
-    public boolean enoughBalance(float requestedAmount)
+    public boolean enoughBalance(double requestedAmount)
     {
         return this.account.getBalance() > requestedAmount;
 
