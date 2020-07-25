@@ -1,5 +1,7 @@
 package com.irisdemo.banksim;
 
+import com.irisdemo.banksim.model.Customer;
+
 public class Util {
 
 

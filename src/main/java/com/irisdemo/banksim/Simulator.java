@@ -1,5 +1,8 @@
 package com.irisdemo.banksim;
 
+import com.irisdemo.banksim.model.*;
+import com.irisdemo.banksim.event.*;
+
 import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
@@ -123,7 +126,7 @@ public class Simulator
                     {
                         // Pick a random customer
                         randomCustomer1 = getRandomCustomer();
-
+                        
                         // Apply a random demographics change
                         event = demographicsEventMaker(randomCustomer1);
                     }

@@ -1,0 +1,11 @@
+{"namespace": "com.irisdemo.banksim.avroevent",
+ "type": "record",
+ "name": "TransferEvent",
+ "fields": [
+    {"name": "id", "type": "long"},
+    {"name": "eventDate", "type": "string", "logicalType": "timestamp-millis"},
+    {"name": "senderAccount", "type": "string"},
+    {"name": "receivingAccount", "type": "string"},
+    {"name": "amount", "type": "double"}
+ ]
+}

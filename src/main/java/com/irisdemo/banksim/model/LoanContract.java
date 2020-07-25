@@ -1,4 +1,4 @@
-package com.irisdemo.banksim;
+package com.irisdemo.banksim.model;
 
 import java.util.Calendar;
  

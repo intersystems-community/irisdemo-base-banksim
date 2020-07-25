@@ -1,4 +1,6 @@
 #!/bin/bash
 
-mvn clean package
+# mvn clean avro:schema package
+
+mvn clean generate-sources package
 

@@ -1,4 +1,4 @@
-package com.irisdemo.banksim;
+package com.irisdemo.banksim.model;
 
 public class Bank extends Customer
 {

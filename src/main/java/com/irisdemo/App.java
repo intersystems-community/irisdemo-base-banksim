@@ -1,6 +1,7 @@
 package com.irisdemo;
 
 import com.irisdemo.banksim.*;
+import com.irisdemo.banksim.event.Event;
 
 import java.util.Calendar;
 import java.util.Scanner; 
