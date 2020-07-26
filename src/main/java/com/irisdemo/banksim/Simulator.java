@@ -229,17 +229,9 @@ public class Simulator
             loanEvent = new LoanContractEvent(currentCalendarDate, loanee, amount);
             // Second, add to the eventqueue a transfer event from the bank to the customer.
             
-            try
-            {
-                bank.addBalance(-amount);
-                loanee.addBalance(amount);
-                loanTransfer = new TransferEvent(currentCalendarDate, "BANK_LOAN", bank, loanee, amount);
-            }
-            catch (InputMismatchException e)
-            {
-                System.out.println("WRONG INPUT TYPE FOR SENDER OR RECEIVER");
-                return null;
-            }
+            bank.addBalance(-amount);
+            loanee.addBalance(amount);
+            loanTransfer = new TransferEvent(currentCalendarDate, "BANK_LOAN", bank, loanee, amount);
 
             // If we are here is because we have both events built without problems. 
             // Let's queue the transfer and return the loan contract
@@ -263,19 +255,10 @@ public class Simulator
         // Otherwise, maybe take a loan and make the transfer.
         if (sender.enoughBalance(amount)) 
         {
-            try
-            {
-                sender.addBalance(-amount);
-                receiver.addBalance(amount);
-                TransferEvent transferEvent = new TransferEvent(currentCalendarDate, "TRANSFER", sender, receiver, amount);
-                return transferEvent;
-            }
-            catch (InputMismatchException e)
-            {
-                System.out.println("WRONG INPUT TYPE FOR SENDER OR RECEIVER");
-                return null;
-            }
-
+            sender.addBalance(-amount);
+            receiver.addBalance(amount);
+            TransferEvent transferEvent = new TransferEvent(currentCalendarDate, "TRANSFER", sender, receiver, amount);
+            return transferEvent;
         } 
         else 
         {
