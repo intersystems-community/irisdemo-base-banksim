@@ -45,6 +45,7 @@ public class TransferEvent extends Event
     {
         super.displayInfo();
         System.out.println("Amount sent   : " + getAmountSent());
+        System.out.println("Transfer type : " + getTransferType());
         System.out.println("SENDER:");
         getSender().displayInfo(true);
         System.out.println("RECEIVER:");
