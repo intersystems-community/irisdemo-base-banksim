@@ -62,7 +62,19 @@ public class Simulator
 
     }
 
-    public Event next() 
+    public synchronized org.apache.avro.specific.SpecificRecordBase nextAvroEvent()
+    {
+        try
+        {
+            return next().getAvroEvent();
+        }
+        catch (NullPointerException e)
+        {
+            return null;
+        }
+    }
+
+    public synchronized Event next() 
     {
         // Base case. Return null if we have already finished the total
         // required events/reached the expected date
