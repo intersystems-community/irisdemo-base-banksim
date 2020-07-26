@@ -45,5 +45,5 @@ public abstract class Event
         System.out.println("Event Date    : " + getExternalEventDate());
     }
 
-    public abstract Object getAvroEvent();
+    public abstract org.apache.avro.specific.SpecificRecordBase getAvroEvent();
 }
