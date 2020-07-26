@@ -10,4 +10,4 @@ then
 fi
     
 
-java -cp ./target/banksim-1.0-SNAPSHOT.jar com.irisdemo.App $amountDays $amountEvents $amountCustomers $pause
+java -jar ./target/banksim-1.0-SNAPSHOT.jar $amountDays $amountEvents $amountCustomers $pause

@@ -3,6 +3,7 @@ package com.irisdemo.banksim.event;
 import com.irisdemo.banksim.model.Customer;
 import org.apache.avro.specific.SpecificRecordBase;
 import java.util.Calendar;
+import com.irisdemo.banksim.avroevent.LoanContractAvroEvent;
 
 public class LoanContractEvent extends Event 
 {
@@ -33,14 +34,14 @@ public class LoanContractEvent extends Event
         getCustomer().displayInfo(false);
     }
 
-    public com.irisdemo.banksim.avroevent.LoanContractEvent getAvroEvent()
+    public LoanContractAvroEvent getAvroEvent()
     {
         Customer customer = getCustomer();
-        return new com.irisdemo.banksim.avroevent.LoanContractEvent(
-                                                                    getId(), 
-                                                                    getExternalEventDate(), 
-                                                                    customer.getAccount().getAccountNumber(), 
-                                                                    getAmountLoaned()
-                                                                );
+        return new LoanContractAvroEvent(
+                                            getId(), 
+                                            getExternalEventDate(), 
+                                            customer.getAccount().getAccountNumber(), 
+                                            getAmountLoaned()
+                                        );
     }
 }

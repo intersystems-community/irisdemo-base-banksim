@@ -2,7 +2,8 @@ package com.irisdemo.banksim.event;
 
 import com.irisdemo.banksim.model.Customer;
 import java.util.Calendar;
-       
+import com.irisdemo.banksim.avroevent.DemographicsAvroEvent;
+
 public class DemographicsEvent extends Event 
 { 
     public Customer customer;
@@ -25,17 +26,17 @@ public class DemographicsEvent extends Event
         getCustomer().displayInfo(true);
     }
 
-    public com.irisdemo.banksim.avroevent.DemographicsEvent getAvroEvent()
+    public DemographicsAvroEvent getAvroEvent()
     {
         Customer customer = getCustomer();
-        return new com.irisdemo.banksim.avroevent.DemographicsEvent(
-                                                                    getId(), 
-                                                                    getExternalEventDate(), 
-                                                                    customer.getAccount().getAccountNumber(), 
-                                                                    customer.getName(),
-                                                                    customer.getState(),
-                                                                    customer.getCity(),
-                                                                    customer.getPhoneNumber()
-                                                                );
+        return new DemographicsAvroEvent(
+                                            getId(), 
+                                            getExternalEventDate(), 
+                                            customer.getAccount().getAccountNumber(), 
+                                            customer.getName(),
+                                            customer.getState(),
+                                            customer.getCity(),
+                                            customer.getPhoneNumber()
+                                        );
     }
 }

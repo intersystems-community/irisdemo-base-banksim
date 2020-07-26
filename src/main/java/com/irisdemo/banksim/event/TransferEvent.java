@@ -1,8 +1,8 @@
 package com.irisdemo.banksim.event;
 
 import com.irisdemo.banksim.model.Customer;
-import org.apache.avro.specific.SpecificRecordBase;
 import java.util.Calendar;
+import com.irisdemo.banksim.avroevent.TransferAvroEvent;
 
 public class TransferEvent extends Event
 {
@@ -52,19 +52,19 @@ public class TransferEvent extends Event
         getReceiver().displayInfo(true);
     }
     
-    public com.irisdemo.banksim.avroevent.TransferEvent getAvroEvent()
+    public TransferAvroEvent getAvroEvent()
     {
         Customer sender = getSender();
         Customer receiver = getReceiver();
         
-        return new com.irisdemo.banksim.avroevent.TransferEvent(
-                                                                    getId(), 
-                                                                    getExternalEventDate(), 
-                                                                    getTransferType(),
-                                                                    sender.getAccount().getAccountNumber(), 
-                                                                    receiver.getAccount().getAccountNumber(), 
-                                                                    getAmountSent()
-                                                                );
+        return new TransferAvroEvent(
+                                        getId(), 
+                                        getExternalEventDate(), 
+                                        getTransferType(),
+                                        sender.getAccount().getAccountNumber(), 
+                                        receiver.getAccount().getAccountNumber(), 
+                                        getAmountSent()
+                                    );
     }
 
 }

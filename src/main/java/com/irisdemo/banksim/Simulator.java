@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.ListIterator;
+import org.apache.avro.specific.SpecificRecordBase;
 
 public class Simulator 
 {
