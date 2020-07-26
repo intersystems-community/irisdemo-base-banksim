@@ -201,7 +201,7 @@ public class Simulator
                     // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
                     try
                     {
-                        paymentEvent = new TransferEvent(this.currentCalendarDate, loan.getBorrower(), bank, loan.getPaymentSize());
+                        paymentEvent = new TransferEvent(this.currentCalendarDate, "LOAN_PAYMENT", loan.getBorrower(), bank, loan.getPaymentSize());
                         eventQueue.add(paymentEvent);
                     }
                     catch(InputMismatchException e)
@@ -239,7 +239,7 @@ public class Simulator
             {
                 bank.addBalance(-amount);
                 loanee.addBalance(amount);
-                loanTransfer = new TransferEvent(currentCalendarDate, bank, loanee, amount);
+                loanTransfer = new TransferEvent(currentCalendarDate, "BANK_LOAN", bank, loanee, amount);
             }
             catch (InputMismatchException e)
             {
@@ -273,7 +273,7 @@ public class Simulator
             {
                 sender.addBalance(-amount);
                 receiver.addBalance(amount);
-                TransferEvent transferEvent = new TransferEvent(currentCalendarDate, sender, receiver, amount);
+                TransferEvent transferEvent = new TransferEvent(currentCalendarDate, "TRANSFER", sender, receiver, amount);
                 return transferEvent;
             }
             catch (InputMismatchException e)

@@ -6,14 +6,16 @@ import java.util.Calendar;
 
 public class TransferEvent extends Event
 {
-    public Customer receiver;
-    public Customer sender;
-    public double amount;
+    private Customer receiver;
+    private Customer sender;
+    private double amount;
+    private String transferType;
 
-    public TransferEvent(Calendar eventDate, Customer sender, Customer receiver, double amount)
+    public TransferEvent(Calendar eventDate, String type, Customer sender, Customer receiver, double amount)
     {
         super(eventDate);
 
+        this.transferType = type;
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
@@ -22,6 +24,11 @@ public class TransferEvent extends Event
     public Customer getSender()
     {
         return sender;
+    }
+
+    public String getTransferType()
+    {
+        return transferType;
     }
 
     public Customer getReceiver()
@@ -52,6 +59,7 @@ public class TransferEvent extends Event
         return new com.irisdemo.banksim.avroevent.TransferEvent(
                                                                     getId(), 
                                                                     getExternalEventDate(), 
+                                                                    getTransferType(),
                                                                     sender.getAccount().getAccountNumber(), 
                                                                     receiver.getAccount().getAccountNumber(), 
                                                                     getAmountSent()

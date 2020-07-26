@@ -64,11 +64,10 @@
                 <goal>schema</goal>
               </goals>
               <configuration>
-                <sourceDirectory>${project.basedir}/src/main/avro/</sourceDirectory>
+                <sourceDirectory>${project.basedir}/src/main/avro/com/irisdemo/banksim/avroevent/</sourceDirectory>
                 <includes>
 								  <include>*.avsc</include>
 							  </includes>
-                <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
 						
               </configuration>
             </execution>

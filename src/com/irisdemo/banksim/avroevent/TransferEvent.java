@@ -14,8 +14,8 @@ import org.apache.avro.message.SchemaStore;
 
 @org.apache.avro.specific.AvroGenerated
 public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  private static final long serialVersionUID = 5344242853740925212L;
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TransferEvent\",\"namespace\":\"com.irisdemo.banksim.avroevent\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"eventDate\",\"type\":\"string\",\"logicalType\":\"timestamp-millis\"},{\"name\":\"senderAccount\",\"type\":\"string\"},{\"name\":\"receivingAccount\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"}]}");
+  private static final long serialVersionUID = -8456902496112058591L;
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TransferEvent\",\"namespace\":\"com.irisdemo.banksim.avroevent\",\"fields\":[{\"name\":\"id\",\"type\":\"long\"},{\"name\":\"eventDate\",\"type\":\"string\",\"logicalType\":\"timestamp-millis\"},{\"name\":\"transferType\",\"type\":\"string\"},{\"name\":\"senderAccount\",\"type\":\"string\"},{\"name\":\"receivingAccount\",\"type\":\"string\"},{\"name\":\"amount\",\"type\":\"double\"}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
@@ -73,6 +73,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
 
   @Deprecated public long id;
   @Deprecated public java.lang.CharSequence eventDate;
+  @Deprecated public java.lang.CharSequence transferType;
   @Deprecated public java.lang.CharSequence senderAccount;
   @Deprecated public java.lang.CharSequence receivingAccount;
   @Deprecated public double amount;
@@ -88,13 +89,15 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
    * All-args constructor.
    * @param id The new value for id
    * @param eventDate The new value for eventDate
+   * @param transferType The new value for transferType
    * @param senderAccount The new value for senderAccount
    * @param receivingAccount The new value for receivingAccount
    * @param amount The new value for amount
    */
-  public TransferEvent(java.lang.Long id, java.lang.CharSequence eventDate, java.lang.CharSequence senderAccount, java.lang.CharSequence receivingAccount, java.lang.Double amount) {
+  public TransferEvent(java.lang.Long id, java.lang.CharSequence eventDate, java.lang.CharSequence transferType, java.lang.CharSequence senderAccount, java.lang.CharSequence receivingAccount, java.lang.Double amount) {
     this.id = id;
     this.eventDate = eventDate;
+    this.transferType = transferType;
     this.senderAccount = senderAccount;
     this.receivingAccount = receivingAccount;
     this.amount = amount;
@@ -107,9 +110,10 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
     switch (field$) {
     case 0: return id;
     case 1: return eventDate;
-    case 2: return senderAccount;
-    case 3: return receivingAccount;
-    case 4: return amount;
+    case 2: return transferType;
+    case 3: return senderAccount;
+    case 4: return receivingAccount;
+    case 5: return amount;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -120,9 +124,10 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
     switch (field$) {
     case 0: id = (java.lang.Long)value$; break;
     case 1: eventDate = (java.lang.CharSequence)value$; break;
-    case 2: senderAccount = (java.lang.CharSequence)value$; break;
-    case 3: receivingAccount = (java.lang.CharSequence)value$; break;
-    case 4: amount = (java.lang.Double)value$; break;
+    case 2: transferType = (java.lang.CharSequence)value$; break;
+    case 3: senderAccount = (java.lang.CharSequence)value$; break;
+    case 4: receivingAccount = (java.lang.CharSequence)value$; break;
+    case 5: amount = (java.lang.Double)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -159,6 +164,23 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
    */
   public void setEventDate(java.lang.CharSequence value) {
     this.eventDate = value;
+  }
+
+  /**
+   * Gets the value of the 'transferType' field.
+   * @return The value of the 'transferType' field.
+   */
+  public java.lang.CharSequence getTransferType() {
+    return transferType;
+  }
+
+
+  /**
+   * Sets the value of the 'transferType' field.
+   * @param value the value to set.
+   */
+  public void setTransferType(java.lang.CharSequence value) {
+    this.transferType = value;
   }
 
   /**
@@ -255,6 +277,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
 
     private long id;
     private java.lang.CharSequence eventDate;
+    private java.lang.CharSequence transferType;
     private java.lang.CharSequence senderAccount;
     private java.lang.CharSequence receivingAccount;
     private double amount;
@@ -278,17 +301,21 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
         this.eventDate = data().deepCopy(fields()[1].schema(), other.eventDate);
         fieldSetFlags()[1] = other.fieldSetFlags()[1];
       }
-      if (isValidValue(fields()[2], other.senderAccount)) {
-        this.senderAccount = data().deepCopy(fields()[2].schema(), other.senderAccount);
+      if (isValidValue(fields()[2], other.transferType)) {
+        this.transferType = data().deepCopy(fields()[2].schema(), other.transferType);
         fieldSetFlags()[2] = other.fieldSetFlags()[2];
       }
-      if (isValidValue(fields()[3], other.receivingAccount)) {
-        this.receivingAccount = data().deepCopy(fields()[3].schema(), other.receivingAccount);
+      if (isValidValue(fields()[3], other.senderAccount)) {
+        this.senderAccount = data().deepCopy(fields()[3].schema(), other.senderAccount);
         fieldSetFlags()[3] = other.fieldSetFlags()[3];
       }
-      if (isValidValue(fields()[4], other.amount)) {
-        this.amount = data().deepCopy(fields()[4].schema(), other.amount);
+      if (isValidValue(fields()[4], other.receivingAccount)) {
+        this.receivingAccount = data().deepCopy(fields()[4].schema(), other.receivingAccount);
         fieldSetFlags()[4] = other.fieldSetFlags()[4];
+      }
+      if (isValidValue(fields()[5], other.amount)) {
+        this.amount = data().deepCopy(fields()[5].schema(), other.amount);
+        fieldSetFlags()[5] = other.fieldSetFlags()[5];
       }
     }
 
@@ -306,17 +333,21 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
         this.eventDate = data().deepCopy(fields()[1].schema(), other.eventDate);
         fieldSetFlags()[1] = true;
       }
-      if (isValidValue(fields()[2], other.senderAccount)) {
-        this.senderAccount = data().deepCopy(fields()[2].schema(), other.senderAccount);
+      if (isValidValue(fields()[2], other.transferType)) {
+        this.transferType = data().deepCopy(fields()[2].schema(), other.transferType);
         fieldSetFlags()[2] = true;
       }
-      if (isValidValue(fields()[3], other.receivingAccount)) {
-        this.receivingAccount = data().deepCopy(fields()[3].schema(), other.receivingAccount);
+      if (isValidValue(fields()[3], other.senderAccount)) {
+        this.senderAccount = data().deepCopy(fields()[3].schema(), other.senderAccount);
         fieldSetFlags()[3] = true;
       }
-      if (isValidValue(fields()[4], other.amount)) {
-        this.amount = data().deepCopy(fields()[4].schema(), other.amount);
+      if (isValidValue(fields()[4], other.receivingAccount)) {
+        this.receivingAccount = data().deepCopy(fields()[4].schema(), other.receivingAccount);
         fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.amount)) {
+        this.amount = data().deepCopy(fields()[5].schema(), other.amount);
+        fieldSetFlags()[5] = true;
       }
     }
 
@@ -400,6 +431,46 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
     }
 
     /**
+      * Gets the value of the 'transferType' field.
+      * @return The value.
+      */
+    public java.lang.CharSequence getTransferType() {
+      return transferType;
+    }
+
+
+    /**
+      * Sets the value of the 'transferType' field.
+      * @param value The value of 'transferType'.
+      * @return This builder.
+      */
+    public com.irisdemo.banksim.avroevent.TransferEvent.Builder setTransferType(java.lang.CharSequence value) {
+      validate(fields()[2], value);
+      this.transferType = value;
+      fieldSetFlags()[2] = true;
+      return this;
+    }
+
+    /**
+      * Checks whether the 'transferType' field has been set.
+      * @return True if the 'transferType' field has been set, false otherwise.
+      */
+    public boolean hasTransferType() {
+      return fieldSetFlags()[2];
+    }
+
+
+    /**
+      * Clears the value of the 'transferType' field.
+      * @return This builder.
+      */
+    public com.irisdemo.banksim.avroevent.TransferEvent.Builder clearTransferType() {
+      transferType = null;
+      fieldSetFlags()[2] = false;
+      return this;
+    }
+
+    /**
       * Gets the value of the 'senderAccount' field.
       * @return The value.
       */
@@ -414,9 +485,9 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public com.irisdemo.banksim.avroevent.TransferEvent.Builder setSenderAccount(java.lang.CharSequence value) {
-      validate(fields()[2], value);
+      validate(fields()[3], value);
       this.senderAccount = value;
-      fieldSetFlags()[2] = true;
+      fieldSetFlags()[3] = true;
       return this;
     }
 
@@ -425,7 +496,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'senderAccount' field has been set, false otherwise.
       */
     public boolean hasSenderAccount() {
-      return fieldSetFlags()[2];
+      return fieldSetFlags()[3];
     }
 
 
@@ -435,7 +506,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       */
     public com.irisdemo.banksim.avroevent.TransferEvent.Builder clearSenderAccount() {
       senderAccount = null;
-      fieldSetFlags()[2] = false;
+      fieldSetFlags()[3] = false;
       return this;
     }
 
@@ -454,9 +525,9 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public com.irisdemo.banksim.avroevent.TransferEvent.Builder setReceivingAccount(java.lang.CharSequence value) {
-      validate(fields()[3], value);
+      validate(fields()[4], value);
       this.receivingAccount = value;
-      fieldSetFlags()[3] = true;
+      fieldSetFlags()[4] = true;
       return this;
     }
 
@@ -465,7 +536,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'receivingAccount' field has been set, false otherwise.
       */
     public boolean hasReceivingAccount() {
-      return fieldSetFlags()[3];
+      return fieldSetFlags()[4];
     }
 
 
@@ -475,7 +546,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       */
     public com.irisdemo.banksim.avroevent.TransferEvent.Builder clearReceivingAccount() {
       receivingAccount = null;
-      fieldSetFlags()[3] = false;
+      fieldSetFlags()[4] = false;
       return this;
     }
 
@@ -494,9 +565,9 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public com.irisdemo.banksim.avroevent.TransferEvent.Builder setAmount(double value) {
-      validate(fields()[4], value);
+      validate(fields()[5], value);
       this.amount = value;
-      fieldSetFlags()[4] = true;
+      fieldSetFlags()[5] = true;
       return this;
     }
 
@@ -505,7 +576,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return True if the 'amount' field has been set, false otherwise.
       */
     public boolean hasAmount() {
-      return fieldSetFlags()[4];
+      return fieldSetFlags()[5];
     }
 
 
@@ -514,7 +585,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       * @return This builder.
       */
     public com.irisdemo.banksim.avroevent.TransferEvent.Builder clearAmount() {
-      fieldSetFlags()[4] = false;
+      fieldSetFlags()[5] = false;
       return this;
     }
 
@@ -525,9 +596,10 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
         TransferEvent record = new TransferEvent();
         record.id = fieldSetFlags()[0] ? this.id : (java.lang.Long) defaultValue(fields()[0]);
         record.eventDate = fieldSetFlags()[1] ? this.eventDate : (java.lang.CharSequence) defaultValue(fields()[1]);
-        record.senderAccount = fieldSetFlags()[2] ? this.senderAccount : (java.lang.CharSequence) defaultValue(fields()[2]);
-        record.receivingAccount = fieldSetFlags()[3] ? this.receivingAccount : (java.lang.CharSequence) defaultValue(fields()[3]);
-        record.amount = fieldSetFlags()[4] ? this.amount : (java.lang.Double) defaultValue(fields()[4]);
+        record.transferType = fieldSetFlags()[2] ? this.transferType : (java.lang.CharSequence) defaultValue(fields()[2]);
+        record.senderAccount = fieldSetFlags()[3] ? this.senderAccount : (java.lang.CharSequence) defaultValue(fields()[3]);
+        record.receivingAccount = fieldSetFlags()[4] ? this.receivingAccount : (java.lang.CharSequence) defaultValue(fields()[4]);
+        record.amount = fieldSetFlags()[5] ? this.amount : (java.lang.Double) defaultValue(fields()[5]);
         return record;
       } catch (org.apache.avro.AvroMissingFieldException e) {
         throw e;
@@ -564,6 +636,8 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
 
     out.writeString(this.eventDate);
 
+    out.writeString(this.transferType);
+
     out.writeString(this.senderAccount);
 
     out.writeString(this.receivingAccount);
@@ -581,6 +655,8 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
 
       this.eventDate = in.readString(this.eventDate instanceof Utf8 ? (Utf8)this.eventDate : null);
 
+      this.transferType = in.readString(this.transferType instanceof Utf8 ? (Utf8)this.transferType : null);
+
       this.senderAccount = in.readString(this.senderAccount instanceof Utf8 ? (Utf8)this.senderAccount : null);
 
       this.receivingAccount = in.readString(this.receivingAccount instanceof Utf8 ? (Utf8)this.receivingAccount : null);
@@ -588,7 +664,7 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
       this.amount = in.readDouble();
 
     } else {
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < 6; i++) {
         switch (fieldOrder[i].pos()) {
         case 0:
           this.id = in.readLong();
@@ -599,14 +675,18 @@ public class TransferEvent extends org.apache.avro.specific.SpecificRecordBase i
           break;
 
         case 2:
-          this.senderAccount = in.readString(this.senderAccount instanceof Utf8 ? (Utf8)this.senderAccount : null);
+          this.transferType = in.readString(this.transferType instanceof Utf8 ? (Utf8)this.transferType : null);
           break;
 
         case 3:
-          this.receivingAccount = in.readString(this.receivingAccount instanceof Utf8 ? (Utf8)this.receivingAccount : null);
+          this.senderAccount = in.readString(this.senderAccount instanceof Utf8 ? (Utf8)this.senderAccount : null);
           break;
 
         case 4:
+          this.receivingAccount = in.readString(this.receivingAccount instanceof Utf8 ? (Utf8)this.receivingAccount : null);
+          break;
+
+        case 5:
           this.amount = in.readDouble();
           break;
 
