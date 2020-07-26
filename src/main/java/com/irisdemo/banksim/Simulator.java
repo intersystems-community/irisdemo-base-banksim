@@ -21,7 +21,7 @@ public class Simulator
     private int currentEventsDay = 0;
     private int millisBetweenEvent;
     private LinkedList<Event> eventQueue = new LinkedList<>();
-    private boolean loansChecked;
+    private boolean loansChecked = false;
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
     private double probabilityLoanContract = .5;
@@ -197,19 +197,12 @@ public class Simulator
 
                 if (loan.dueToday(this.currentCalendarDate)) 
                 {
+                    
                     loan.makePayment();
 
                     // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
-                    try
-                    {
-                        paymentEvent = new TransferEvent(this.currentCalendarDate, "LOAN_PAYMENT", loan.getBorrower(), bank, loan.getPaymentSize());
-                        eventQueue.add(paymentEvent);
-                    }
-                    catch(InputMismatchException e)
-                    {
-                        System.out.println("WRONG INPUT TYPE FOR SENDER OR RECEIVER");
-                    }
-                    
+                    paymentEvent = new TransferEvent(this.currentCalendarDate, "LOAN_PAYMENT", loan.getBorrower(), bank, loan.getPaymentSize());
+                    eventQueue.add(paymentEvent);                    
 
                     // if the loan has been succesfully paid off, remove it from the loan Linked
                     // List and make a Loan Complete Event
