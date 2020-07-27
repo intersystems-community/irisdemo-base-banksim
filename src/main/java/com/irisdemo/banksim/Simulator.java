@@ -208,7 +208,8 @@ public class Simulator
                     // if the loan has been succesfully paid off, remove it from the loan Linked
                     // List and make a Loan Complete Event
                     if (loan.isComplete()) {
-                        loansList.remove(loan);
+                        loanIterator.remove();
+                        //loansList.remove(loan);
                     }
 
                 }
@@ -228,7 +229,9 @@ public class Simulator
         
             //
             float paymentSize = amount/loanLengths[(int)Math.round(Math.random()*(loanLengths.length-1))];
-            LoanContract newContract = new LoanContract(loanee, amount, currentCalendarDate.get(Calendar.DAY_OF_MONTH), paymentSize);
+            Calendar newDate = (Calendar)currentCalendarDate.clone();
+            newDate.add(Calendar.DAY_OF_YEAR,1);
+            LoanContract newContract = new LoanContract(loanee, bank, amount, newDate.get(Calendar.DAY_OF_MONTH), paymentSize);
             loansList.add(newContract);
 
 
