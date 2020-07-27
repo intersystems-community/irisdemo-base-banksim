@@ -40,7 +40,7 @@ public class LoanContract
 
     public boolean isComplete()
     {
-        return (int)amountOwed == 0;
+        return (int)amountOwed <= 0;
     }
 
     public String getBorrowerAccount()
