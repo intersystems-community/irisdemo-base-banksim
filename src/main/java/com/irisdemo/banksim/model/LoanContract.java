@@ -7,15 +7,16 @@ public class LoanContract
     public Customer borrower;
     private float amountOwed;
     private float paymentSize;
-    public static Bank bank;
+    public Bank bank;
     public int dayDue;
 
-    public LoanContract(Customer borrower, float initialAmount, int dayDue, float paymentSize)
+    public LoanContract(Customer borrower, Bank bank, float initialAmount, int dayDue, float paymentSize)
     {
         this.borrower=borrower;
         this.amountOwed=initialAmount;
         this.dayDue = dayDue;
         this.paymentSize = paymentSize;
+        this.bank = bank;
 
     }
 
@@ -24,9 +25,9 @@ public class LoanContract
         return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dayDue;
     }
 
-    public static boolean feasibleLoan(float amount)
+    public boolean feasibleLoan(float amount)
     {
-        return bank.enoughBalance(amount);
+        return this.bank.enoughBalance(amount);
     }
 
     public void makePayment()
@@ -40,7 +41,7 @@ public class LoanContract
 
     public boolean isComplete()
     {
-        return (int)amountOwed == 0;
+        return (int)amountOwed <= 0;
     }
 
     public String getBorrowerAccount()

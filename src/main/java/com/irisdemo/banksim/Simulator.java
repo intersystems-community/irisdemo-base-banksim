@@ -25,6 +25,7 @@ public class Simulator
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
     private double probabilityLoanContract = .5;
+    private Integer[] loanLengths = {3,6,9,12,18,24};
 
     private String[] demographics = { "State", "City", "Phone Number" };
 
@@ -207,7 +208,8 @@ public class Simulator
                     // if the loan has been succesfully paid off, remove it from the loan Linked
                     // List and make a Loan Complete Event
                     if (loan.isComplete()) {
-                        loansList.remove(loan);
+                        loanIterator.remove();
+                        //loansList.remove(loan);
                     }
 
                 }
@@ -223,7 +225,19 @@ public class Simulator
         // Check if bank can make a loan of this amount. Otherwise LOAN failed event
         if (bank.enoughBalance(amount)) 
         {
+            //CREATE LOANCONTRACT AND ADD IT TO THE LIST OF ACTIVE CONTRACTS
+        
+            //
+            float paymentSize = amount/loanLengths[(int)Math.round(Math.random()*(loanLengths.length-1))];
+            Calendar newDate = (Calendar)currentCalendarDate.clone();
+            newDate.add(Calendar.DAY_OF_YEAR,1);
+            LoanContract newContract = new LoanContract(loanee, bank, amount, newDate.get(Calendar.DAY_OF_MONTH), paymentSize);
+            loansList.add(newContract);
+
+
             // 2 Events. Loan Created, Loan Made (transfer).
+
+            
 
             // First, create the loan event that is sent out to the system
             loanEvent = new LoanContractEvent(currentCalendarDate, loanee, amount);
