@@ -2,8 +2,9 @@
  "type": "record",
  "name": "LoanContractAvroEvent",
  "fields": [
-    {"name": "id", "type": "long"},
+    {"name": "eventId", "type": "long"},
     {"name": "eventDate", "type": "string", "logicalType": "timestamp-millis"},
+    {"name": "customerId", "type": "long"},
     {"name": "account", "type": "string"},
     {"name": "amount", "type": "double"}
  ]

@@ -2,32 +2,41 @@ package com.irisdemo.banksim.model;
 
 import java.util.Calendar;
  
-public class LoanContract
+public class LoanContract extends Identifyable
 {
-    public Customer borrower;
-    private float amountOwed;
-    private float paymentSize;
-    public Bank bank;
-    public int dayDue;
 
-    public LoanContract(Customer borrower, Bank bank, float initialAmount, int dayDue, float paymentSize)
+    private Customer borrower;
+    private double amountOwed;
+    private double contractAmount;
+    private double paymentSize;
+    private Bank bank;
+    private int dayDue;
+    
+    public LoanContract(Customer borrower, Bank bank, double contractAmount, int dayDue, double paymentSize)
     {
+        super();
+
         this.borrower=borrower;
-        this.amountOwed=initialAmount;
+        this.amountOwed=contractAmount;
+        this.contractAmount=contractAmount;
         this.dayDue = dayDue;
         this.paymentSize = paymentSize;
         this.bank = bank;
+    }
 
+    public double getContractAmount()
+    {
+        return this.contractAmount;
+    }
+
+    public String getReference()
+    {
+        return "LOAN #"+getId();
     }
 
     public boolean dueToday(Calendar currentCalendarDate)
     {
         return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dayDue;
-    }
-
-    public boolean feasibleLoan(float amount)
-    {
-        return this.bank.enoughBalance(amount);
     }
 
     public void makePayment()
@@ -49,7 +58,7 @@ public class LoanContract
         return borrower.getAccountNumber();
     }
 
-    public float getPaymentSize()
+    public double getPaymentSize()
     {
         return paymentSize;
     }
@@ -58,8 +67,5 @@ public class LoanContract
     {
         return borrower;
     }
-
-
-
 
 }

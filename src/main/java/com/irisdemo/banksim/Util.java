@@ -59,7 +59,7 @@ public class Util {
     }
 
     public static double getRandomTransferAmount(final Customer customer) {
-        final double maxAmount = customer.account.getBalance();
+        final double maxAmount = customer.getAccount().getBalance();
         //getting random amount, multiplied by a Random number between 1 and 2 to allow for possibillity of asking for too much money.
         return Math.random()*maxAmount;
     }

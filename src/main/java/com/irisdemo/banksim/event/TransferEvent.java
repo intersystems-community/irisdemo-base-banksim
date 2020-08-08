@@ -10,8 +10,9 @@ public class TransferEvent extends Event
     private Customer sender;
     private double amount;
     private String transferType;
+    private String reference;
 
-    public TransferEvent(Calendar eventDate, String type, Customer sender, Customer receiver, double amount)
+    public TransferEvent(Calendar eventDate, String type, Customer sender, Customer receiver, double amount, String reference)
     {
         super(eventDate);
 
@@ -19,6 +20,12 @@ public class TransferEvent extends Event
         this.sender = sender;
         this.receiver = receiver;
         this.amount = amount;
+        this.reference = reference;
+    }
+
+    public String getReference()
+    {
+        return this.reference;
     }
 
     public Customer getSender()
@@ -46,6 +53,7 @@ public class TransferEvent extends Event
         super.displayInfo();
         System.out.println("Amount sent   : " + getAmountSent());
         System.out.println("Transfer type : " + getTransferType());
+        System.out.println("Reference     : " + getReference());
         System.out.println("SENDER:");
         getSender().displayInfo(true);
         System.out.println("RECEIVER:");
@@ -61,6 +69,7 @@ public class TransferEvent extends Event
                                         getId(), 
                                         getExternalEventDate(), 
                                         getTransferType(),
+                                        getReference(),
                                         sender.getAccount().getAccountNumber(), 
                                         receiver.getAccount().getAccountNumber(), 
                                         getAmountSent()

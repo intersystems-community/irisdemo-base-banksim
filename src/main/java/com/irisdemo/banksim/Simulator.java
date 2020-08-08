@@ -4,10 +4,8 @@ import com.irisdemo.banksim.model.*;
 import com.irisdemo.banksim.event.*;
 
 import java.util.Calendar;
-import java.util.InputMismatchException;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import org.apache.avro.specific.SpecificRecordBase;
 
 public class Simulator 
 {
@@ -20,14 +18,13 @@ public class Simulator
     private int maxNumberOfEvents;
     private int currentEventsDay = 0;
     private int millisBetweenEvent;
+    private LinkedList<Event> initializationEventsQueue = new LinkedList<>();
     private LinkedList<Event> eventQueue = new LinkedList<>();
     private boolean loansChecked = false;
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
     private double probabilityLoanContract = .5;
     private Integer[] loanLengths = {3,6,9,12,18,24};
-
-    private String[] demographics = { "State", "City", "Phone Number" };
 
     public Simulator(int amountDays, int maxNumberOfEvents, int amountCustomers) 
     {
@@ -47,6 +44,9 @@ public class Simulator
         // Initial state for Customers/Bank/Accounts/Loans
         allCustomers = new Customer[amountCustomers];
 
+        // All accounts will be created on the same day for now
+        Calendar newAccountCreationDate = (Calendar)currentCalendarDate.clone();
+
         // Customers and Account (This simulator only allows one account per customer for now)
         for (int i = 1; i < amountCustomers; i++) 
         {
@@ -57,10 +57,13 @@ public class Simulator
             String phoneNumber = Util.getRandomPhoneNumber();
 
             allCustomers[i-1] = new Customer(accountNumber, (float) (Math.random() * 100000), name, state, city, phoneNumber);
+
+            initializationEventsQueue.add(new NewCustomerEvent(newAccountCreationDate, allCustomers[i-1]));
         }
 
         // Initial balance of 10 billion
         bank = new Bank(10000000000d);
+        initializationEventsQueue.add(new NewCustomerEvent(newAccountCreationDate, bank));
 
     }
 
@@ -78,6 +81,12 @@ public class Simulator
 
     public synchronized Event next() 
     {
+        // Initialization events do not advance time and do not count as events of the simulation
+        if (!initializationEventsQueue.isEmpty())
+        {
+            return initializationEventsQueue.pop();
+        }
+
         // Base case. Return null if we have already finished the total
         // required events/reached the expected date
         if (totalEvents == maxNumberOfEvents) {
@@ -184,32 +193,31 @@ public class Simulator
 
     public void checkLoansDay() 
     {
-        LoanContract loan;
+        LoanContract loanContract;
         TransferEvent paymentEvent;
 
-        // Once a day, go over every loan and check if they're due.
+        // Once a day, go over every loanContract and check if they're due.
         if (!loansChecked) 
         {
             ListIterator<LoanContract> loanIterator = loansList.listIterator();
 
             while (loanIterator.hasNext()) 
             {
-                loan = loanIterator.next();
+                loanContract = loanIterator.next();
 
-                if (loan.dueToday(this.currentCalendarDate)) 
+                if (loanContract.dueToday(this.currentCalendarDate)) 
                 {
                     
-                    loan.makePayment();
+                    loanContract.makePayment();
 
                     // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
-                    paymentEvent = new TransferEvent(this.currentCalendarDate, "LOAN_PAYMENT", loan.getBorrower(), bank, loan.getPaymentSize());
+                    paymentEvent = new TransferEvent(this.currentCalendarDate, "LOAN_PAYMENT", loanContract.getBorrower(), bank, loanContract.getPaymentSize(), loanContract.getReference());
                     eventQueue.add(paymentEvent);                    
 
-                    // if the loan has been succesfully paid off, remove it from the loan Linked
+                    // if the loanContract has been succesfully paid off, remove it from the loanContract Linked
                     // List and make a Loan Complete Event
-                    if (loan.isComplete()) {
+                    if (loanContract.isComplete()) {
                         loanIterator.remove();
-                        //loansList.remove(loan);
                     }
 
                 }
@@ -226,8 +234,6 @@ public class Simulator
         if (bank.enoughBalance(amount)) 
         {
             //CREATE LOANCONTRACT AND ADD IT TO THE LIST OF ACTIVE CONTRACTS
-        
-            //
             float paymentSize = amount/loanLengths[(int)Math.round(Math.random()*(loanLengths.length-1))];
             Calendar newDate = (Calendar)currentCalendarDate.clone();
             newDate.add(Calendar.DAY_OF_YEAR,1);
@@ -240,12 +246,12 @@ public class Simulator
             
 
             // First, create the loan event that is sent out to the system
-            loanEvent = new LoanContractEvent(currentCalendarDate, loanee, amount);
+            loanEvent = new LoanContractEvent(currentCalendarDate, newContract);
+
             // Second, add to the eventqueue a transfer event from the bank to the customer.
-            
             bank.addBalance(-amount);
             loanee.addBalance(amount);
-            loanTransfer = new TransferEvent(currentCalendarDate, "BANK_LOAN", bank, loanee, amount);
+            loanTransfer = new TransferEvent(currentCalendarDate, "BANK_LOAN", bank, loanee, amount, newContract.getReference());
 
             // If we are here is because we have both events built without problems. 
             // Let's queue the transfer and return the loan contract
@@ -271,7 +277,7 @@ public class Simulator
         {
             sender.addBalance(-amount);
             receiver.addBalance(amount);
-            TransferEvent transferEvent = new TransferEvent(currentCalendarDate, "TRANSFER", sender, receiver, amount);
+            TransferEvent transferEvent = new TransferEvent(currentCalendarDate, "TRANSFER", sender, receiver, amount, "");
             return transferEvent;
         } 
         else 

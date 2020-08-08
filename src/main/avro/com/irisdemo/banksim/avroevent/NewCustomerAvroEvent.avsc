@@ -1,13 +1,14 @@
 {"namespace": "com.irisdemo.banksim.avroevent",
     "type": "record",
-    "name": "DemographicsAvroEvent",
+    "name": "NewCustomerAvroEvent",
     "fields": 
     [
         {"name": "eventId", "type": "long"},
         {"name": "eventDate", "type": "string", "logicalType": "timestamp-millis"},
         {"name": "customerId", "type": "long"},
         {"name": "name", "type": "string"},
-        
+        {"name": "accountNumber", "type": "string"},
+        {"name": "initialAmount", "type": "double"},
         {"name": "address", "type": 
             {
                 "type" : "record",

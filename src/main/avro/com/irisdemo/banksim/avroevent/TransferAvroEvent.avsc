@@ -2,9 +2,10 @@
  "type": "record",
  "name": "TransferAvroEvent",
  "fields": [
-    {"name": "id", "type": "long"},
+    {"name": "eventId", "type": "long"},
     {"name": "eventDate", "type": "string", "logicalType": "timestamp-millis"},
     {"name": "transferType", "type": "string"},
+    {"name": "reference", "type": "string"},
     {"name": "senderAccount", "type": "string"},
     {"name": "receivingAccount", "type": "string"},
     {"name": "amount", "type": "double"}

@@ -1,10 +1,10 @@
 package com.irisdemo.banksim.model;
 
 
-public class Customer
+public class Customer extends Identifyable
 {
 
-    public Account account;
+    private Account account;
     private String name;
     private String state;
     private String city;
@@ -13,9 +13,10 @@ public class Customer
     
     public Customer(String accountNumber, double initialMoney, String name, String state, String city, String phoneNumber)
     {
+        super();
+
         this.name = name;
         this.state = state;
-        this.account = account;
         this.phoneNumber = phoneNumber;
         this.city = city;
 
