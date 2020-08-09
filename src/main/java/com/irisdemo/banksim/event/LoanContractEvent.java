@@ -26,6 +26,7 @@ public class LoanContractEvent extends Event
         return new LoanContractAvroEvent(
                                             getId(), 
                                             getExternalEventDate(), 
+                                            contract.getId(),
                                             contract.getBorrower().getId(),
                                             contract.getBorrower().getAccount().getAccountNumber(), 
                                             contract.getContractAmount()
