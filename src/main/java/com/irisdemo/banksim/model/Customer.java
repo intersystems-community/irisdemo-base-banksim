@@ -1,5 +1,6 @@
 package com.irisdemo.banksim.model;
 
+import com.irisdemo.banksim.Identifyable;
 
 public class Customer extends Identifyable
 {

@@ -1,4 +1,4 @@
-package com.irisdemo.banksim.model;
+package com.irisdemo.banksim;
 
 public class Identifyable {
     private static long idCounter = 0;

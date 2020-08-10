@@ -3,24 +3,20 @@ package com.irisdemo.banksim.event;
 import java.util.Calendar;
 import org.apache.avro.specific.SpecificRecordBase;
 import java.text.SimpleDateFormat;
+import com.irisdemo.banksim.Identifyable;
 
-public abstract class Event 
+public abstract class Event extends Identifyable
 {
     private static long idCounter = 0;
 
     private Calendar eventDate;
-    private long id;
     private static SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
     public Event(Calendar eventDate)
     {
-        this.id = getNextId();
-        this.eventDate = (Calendar)eventDate.clone();
-    }
+        super();
 
-    private synchronized long getNextId()
-    {
-        return ++this.idCounter;
+        this.eventDate = (Calendar)eventDate.clone();
     }
 
     public Calendar getEventDate()
@@ -31,11 +27,6 @@ public abstract class Event
     public String getExternalEventDate()
     {
         return dateTimeFormatter.format(this.eventDate.getTimeInMillis());
-    }
-
-    public long getId()
-    {
-        return this.id;
     }
 
     public void displayInfo()

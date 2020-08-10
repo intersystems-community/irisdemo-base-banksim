@@ -1,7 +1,8 @@
 package com.irisdemo.banksim.model;
 
 import java.util.Calendar;
- 
+import com.irisdemo.banksim.Identifyable;
+
 public class LoanContract extends Identifyable
 {
 
