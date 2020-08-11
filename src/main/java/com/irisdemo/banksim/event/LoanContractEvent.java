@@ -21,6 +21,11 @@ public class LoanContractEvent extends Event
         contract.getBorrower().displayInfo(false);
     }
 
+    public long getPartitionKey()
+    {
+        return contract.getBorrower().getId();
+    }
+
     public LoanContractAvroEvent getAvroEvent()
     {
         return new LoanContractAvroEvent(

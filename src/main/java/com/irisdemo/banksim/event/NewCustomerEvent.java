@@ -21,6 +21,11 @@ public class NewCustomerEvent extends Event
         customer.displayInfo(true);
     }
 
+    public long getPartitionKey()
+    {
+        return customer.getId();
+    }
+
     public NewCustomerAvroEvent getAvroEvent()
     {
         mailing_address address = new mailing_address(customer.getState(), customer.getCity(), customer.getPhoneNumber()); 

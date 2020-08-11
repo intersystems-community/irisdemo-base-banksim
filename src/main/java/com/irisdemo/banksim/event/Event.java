@@ -29,6 +29,8 @@ public abstract class Event extends Identifyable
         return dateTimeFormatter.format(this.eventDate.getTimeInMillis());
     }
 
+    public abstract long getPartitionKey();
+
     public void displayInfo()
     {
         System.out.println("Event type    : " + getClass().getName());

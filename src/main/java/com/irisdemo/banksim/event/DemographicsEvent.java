@@ -21,6 +21,11 @@ public class DemographicsEvent extends Event
         customer.displayInfo(true);
     }
 
+    public long getPartitionKey()
+    {
+        return customer.getId();
+    }
+
     public DemographicsAvroEvent getAvroEvent()
     {
         mailing_address address = new mailing_address(customer.getState(), customer.getCity(), customer.getPhoneNumber()); 

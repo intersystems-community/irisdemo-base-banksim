@@ -48,6 +48,11 @@ public class TransferEvent extends Event
         return amount;
     }
 
+    public long getPartitionKey()
+    {
+        return sender.getId();
+    }
+
     public void displayInfo()
     {
         super.displayInfo();
