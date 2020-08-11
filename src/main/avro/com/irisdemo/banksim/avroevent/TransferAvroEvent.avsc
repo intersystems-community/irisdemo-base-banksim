@@ -6,6 +6,7 @@
     {"name": "eventDate", "type": "string", "logicalType": "timestamp-millis"},
     {"name": "transferType", "type": "string"},
     {"name": "reference", "type": "string"},
+    {"name": "customerId", "type": "long"},
     {"name": "senderAccount", "type": "string"},
     {"name": "receivingAccount", "type": "string"},
     {"name": "amount", "type": "double"}
