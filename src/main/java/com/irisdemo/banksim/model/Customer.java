@@ -92,8 +92,13 @@ public class Customer extends Identifyable
         return this.account.getAccountNumber();
     }
     
-
-   
+    public double getRandomTransferAmount() 
+    {
+        final double maxAmount = this.getAccount().getBalance();
+        //getting random amount, multiplied by a Random number between 1 and 2 to allow for possibillity of asking for too much money.
+        return Math.random()*maxAmount;
+    }
+  
 
 
 }

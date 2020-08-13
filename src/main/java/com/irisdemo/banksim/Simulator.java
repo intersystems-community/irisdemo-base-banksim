@@ -7,11 +7,13 @@ import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import com.irisdemo.banksim.module.*;
+
 public class Simulator 
 {
     private Customer[] allCustomers;
     private Bank bank;
-    private LinkedList<LoanContract> loansList = new LinkedList<>();
+    
     private Calendar currentCalendarDate;
     private int maxEventsPerDay;
     private int totalEvents;
@@ -20,11 +22,15 @@ public class Simulator
     private int millisBetweenEvent;
     private LinkedList<Event> initializationEventsQueue = new LinkedList<>();
     private LinkedList<Event> eventQueue = new LinkedList<>();
-    private boolean loansChecked = false;
+    private boolean dailyChecksRun = false;
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
     private double probabilityLoanContract = .5;
-    private Integer[] loanLengths = {3,6,9,12,18,24};
+    
+
+    private CustomerDemographicsModule customerDemographicsModule;
+    private TransferModule transfersModule;
+    private LoanModule loanModule;
 
     public Simulator(int amountDays, int maxNumberOfEvents, int amountCustomers) 
     {
@@ -43,6 +49,11 @@ public class Simulator
 
         // Initial state for Customers/Bank/Accounts/Loans
         allCustomers = new Customer[amountCustomers];
+
+        // Modules:
+        this.customerDemographicsModule = new CustomerDemographicsModule(this, this.probabilityDemographics);
+        this.transfersModule = new TransferModule(this, this.probabilityTransfer);
+        this.loanModule = new LoanModule(this, this.probabilityLoanContract);
 
         // All accounts will be created on the same day for now
         Calendar newAccountCreationDate = (Calendar)currentCalendarDate.clone();
@@ -95,7 +106,14 @@ public class Simulator
 
         // verify if any loans have to be paid. This does not advance time. 
         // Many loan payment events will be queued with the same time as now
-        checkLoansDay();
+        if (!dailyChecksRun)
+        {
+            loanModule.dailyChecks();
+            customerDemographicsModule.dailyChecks();
+            transfersModule.dailyChecks();
+
+            dailyChecksRun = true;
+        }
 
         // checkLoansDay() can queue several loan payments on the eventQueue. These are of higher priority.
         // At every call to next() we will return events from this queue until it is empty. Eventually, after 
@@ -133,194 +151,46 @@ public class Simulator
            2 - New Loan Contract
         */
         
-        Event event = null;
-        Customer randomCustomer1 = null;
-        Customer randomCustomer2 = null;
+        // These calls to produceEvents() will queue one or more events on the event queue for the next time
+        // the next() method is called.
+        int randomChoice = (int)(Math.random()*3);
 
-        while (event == null)
-        {
-            int randomChoice = (int)(Math.random()*3);
-
-            switch(randomChoice)
-            {
-                // Demographics
-                case 0:
-                    if (Math.random()>probabilityDemographics)
-                    {
-                        // Pick a random customer
-                        randomCustomer1 = getRandomCustomer();
-                        
-                        // Apply a random demographics change
-                        event = demographicsEventMaker(randomCustomer1);
-                    }
-                    break;
-
-                // Transfer
-                case 1:
-                    if (Math.random()>probabilityTransfer)
-                    {
-                        // Make sure we are picking two different random customers.
-                        do
-                        {
-                            randomCustomer1 = getRandomCustomer();
-                            randomCustomer2 = getRandomCustomer();
-                        }
-                        while (randomCustomer1==randomCustomer2);
-            
-                        event = transferEventMaker(randomCustomer1, randomCustomer2);
-                    }
-                    break;
-
-                // New Loan Contract
-                case 2:
-                    if (Math.random()>probabilityLoanContract)
-                    {
-                        randomCustomer1 = getRandomCustomer();
-                        float randomAmount = (float) (Math.random() * 10000);
-                        event = loanEventMaker(randomCustomer1, randomAmount); 
-            
-                    }
-                    break;
-                
-            } // switch case
-        } // while
-
-        totalEvents++;
-        currentEventsDay++;
-
-        return event;
-    }
-
-    public void checkLoansDay() 
-    {
-        LoanContract loanContract;
-        TransferEvent paymentEvent;
-
-        // Once a day, go over every loanContract and check if they're due.
-        if (!loansChecked) 
-        {
-            ListIterator<LoanContract> loanIterator = loansList.listIterator();
-
-            while (loanIterator.hasNext()) 
-            {
-                loanContract = loanIterator.next();
-
-                if (loanContract.dueToday(this.currentCalendarDate)) 
-                {
-                    
-                    loanContract.makePayment();
-
-                    // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
-                    paymentEvent = new TransferEvent(this.currentCalendarDate, "LOAN_PAYMENT", loanContract.getBorrower(), bank, loanContract.getPaymentSize(), loanContract.getReference());
-                    eventQueue.add(paymentEvent);                    
-
-                    // if the loanContract has been succesfully paid off, remove it from the loanContract Linked
-                    // List and make a Loan Complete Event
-                    if (loanContract.isComplete()) {
-                        loanIterator.remove();
-                    }
-
-                }
-            }
-            loansChecked = true;
-        }
-    }
-
-    public Event loanEventMaker(Customer loanee, float amount) {
-        LoanContractEvent loanEvent = null;
-        TransferEvent loanTransfer = null;
-
-        // Check if bank can make a loan of this amount. Otherwise LOAN failed event
-        if (bank.enoughBalance(amount)) 
-        {
-            //CREATE LOANCONTRACT AND ADD IT TO THE LIST OF ACTIVE CONTRACTS
-            float paymentSize = amount/loanLengths[(int)Math.round(Math.random()*(loanLengths.length-1))];
-            Calendar newDate = (Calendar)currentCalendarDate.clone();
-            newDate.add(Calendar.DAY_OF_YEAR,1);
-            LoanContract newContract = new LoanContract(loanee, bank, amount, newDate.get(Calendar.DAY_OF_MONTH), paymentSize);
-            loansList.add(newContract);
-
-
-            // 2 Events. Loan Created, Loan Made (transfer).
-
-            
-
-            // First, create the loan event that is sent out to the system
-            loanEvent = new LoanContractEvent(currentCalendarDate, newContract);
-
-            // Second, add to the eventqueue a transfer event from the bank to the customer.
-            bank.addBalance(-amount);
-            loanee.addBalance(amount);
-            loanTransfer = new TransferEvent(currentCalendarDate, "BANK_LOAN", bank, loanee, amount, newContract.getReference());
-
-            // If we are here is because we have both events built without problems. 
-            // Let's queue the transfer and return the loan contract
-            eventQueue.add(loanTransfer);
-            return loanEvent;
-
-        } 
-        else 
-        {
-            // if the bank doesnt have enough money, try another event
-            return null;
-        }
-
-    }
-
-    public Event transferEventMaker(Customer sender, Customer receiver) {
-
-        double amount = Util.getRandomTransferAmount(sender);
-
-        // Verify if transfer is doable. If so, create and return the transfer event.
-        // Otherwise, maybe take a loan and make the transfer.
-        if (sender.enoughBalance(amount)) 
-        {
-            sender.addBalance(-amount);
-            receiver.addBalance(amount);
-            TransferEvent transferEvent = new TransferEvent(currentCalendarDate, "TRANSFER", sender, receiver, amount, "");
-            return transferEvent;
-        } 
-        else 
-        {
-            // if there's no money, just try another event
-            return null;
-        }
- 
-    }
-
-    public Event demographicsEventMaker(Customer customer) 
-    {
-        int choice = (int) (Math.random() * 2);
-
-        switch (choice) 
+        switch(randomChoice)
         {
             case 0:
-                customer.setState(Util.getRandomState());
+                customerDemographicsModule.produceEvents();
                 break;
 
             case 1:
-                customer.setCity(Util.getRandomCity());
+                transfersModule.produceEvents();
                 break;
 
             case 2:
-                customer.setPhoneNumber(Util.getRandomPhoneNumber());
+                loanModule.produceEvents();
                 break;
-
-            default:
-                return null;
+            
         }
 
-        return new DemographicsEvent(currentCalendarDate, customer);
+        return next();
+    }
 
+    public void queueEvent(Event event)
+    {
+        eventQueue.add(event);
     }
 
     // Starts a new day
     public void newDay() 
     {        
         currentEventsDay = 0;
-        loansChecked = false;
+        dailyChecksRun = false;
         currentCalendarDate.add(Calendar.DAY_OF_YEAR, 1);
         currentCalendarDate.set(Calendar.HOUR_OF_DAY, 0);
+    }
+
+    public Calendar getCurrentCalendarDate()
+    {
+        return this.currentCalendarDate;
     }
 
     // advance time in current day
@@ -331,6 +201,11 @@ public class Simulator
 
     public Customer getRandomCustomer() {
         return allCustomers[(int) (Math.random() * (allCustomers.length - 1))];
+    }
+
+    public Bank getBank()
+    {
+        return this.bank;
     }
 
 

@@ -7,8 +7,8 @@
     {"name": "transferType", "type": "string"},
     {"name": "reference", "type": "string"},
     {"name": "customerId", "type": "long"},
-    {"name": "senderAccount", "type": "string"},
-    {"name": "receivingAccount", "type": "string"},
+    {"name": "customerAccount", "type": "string"},
+    {"name": "otherAccount", "type": "string"},
     {"name": "amount", "type": "double"}
  ]
 }
