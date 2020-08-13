@@ -39,12 +39,11 @@ public class Simulator
         this.currentCalendarDate.add(Calendar.DATE, -amountDays);
         currentCalendarDate.set(Calendar.HOUR_OF_DAY, 0);
 
+        this.maxNumberOfEvents = maxNumberOfEvents;
         this.maxEventsPerDay = maxNumberOfEvents / amountDays;
         
         // A day has 24*60*60 = 86400 seconds
         this.millisBetweenEvent = 86400/maxEventsPerDay*1000;
-
-        this.maxNumberOfEvents = maxNumberOfEvents;
 
         // Initial state for Customers/Bank/Accounts/Loans
         allCustomers = new Customer[amountCustomers];
