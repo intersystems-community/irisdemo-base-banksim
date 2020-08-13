@@ -57,7 +57,7 @@ public class LoanModule extends Module {
             bank.addBalance(-amount);
             customer.addBalance(amount);
 
-            transferEventOut = new TransferEvent(simulator.getCurrentCalendarDate(), "BANK_LOAN_OUT", bank, customer, -amount, "");
+            transferEventOut = new TransferEvent(simulator.getCurrentCalendarDate(), "BANK_LOAN_OUT", bank, customer, -amount, loanContract.getReference());
             transferEventIn = transferEventOut.createInverse();
             
             simulator.queueEvent(loanContractEvent);
