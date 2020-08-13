@@ -22,7 +22,6 @@ public class Simulator
     private int millisBetweenEvent;
     private LinkedList<Event> initializationEventsQueue = new LinkedList<>();
     private LinkedList<Event> eventQueue = new LinkedList<>();
-    private boolean dailyChecksRun = false;
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
     private double probabilityLoanContract = .05;
@@ -104,17 +103,6 @@ public class Simulator
             return null;
         }
 
-        // verify if any loans have to be paid. This does not advance time. 
-        // Many loan payment events will be queued with the same time as now
-        if (!dailyChecksRun)
-        {
-            loanModule.dailyChecks();
-            customerDemographicsModule.dailyChecks();
-            transfersModule.dailyChecks();
-
-            dailyChecksRun = true;
-        }
-
         // checkLoansDay() can queue several loan payments on the eventQueue. These are of higher priority.
         // At every call to next() we will return events from this queue until it is empty. Eventually, after 
         // many calls to next(), the queue will be empty and all loan payments will be reported. We will then move
@@ -183,9 +171,15 @@ public class Simulator
     public void newDay() 
     {        
         currentEventsDay = 0;
-        dailyChecksRun = false;
         currentCalendarDate.add(Calendar.DAY_OF_YEAR, 1);
         currentCalendarDate.set(Calendar.HOUR_OF_DAY, 0);
+
+        // verify if any loans have to be paid. This does not advance time. 
+        // Many loan payment events will be queued with the same time as now
+
+        loanModule.dailyChecks();
+        customerDemographicsModule.dailyChecks();
+        transfersModule.dailyChecks();
     }
 
     public Calendar getCurrentCalendarDate()

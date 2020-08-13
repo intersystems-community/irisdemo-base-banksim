@@ -3,12 +3,9 @@ package com.irisdemo.banksim.event;
 import java.util.Calendar;
 import org.apache.avro.specific.SpecificRecordBase;
 import java.text.SimpleDateFormat;
-import com.irisdemo.banksim.Identifyable;
 
-public abstract class Event extends Identifyable
+public abstract class Event extends IdentifyableEvent
 {
-    private static long idCounter = 0;
-
     private Calendar eventDate;
     private static SimpleDateFormat dateTimeFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 

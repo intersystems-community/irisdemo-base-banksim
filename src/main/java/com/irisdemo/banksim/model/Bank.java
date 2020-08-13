@@ -1,7 +1,5 @@
 package com.irisdemo.banksim.model;
 
-import com.irisdemo.banksim.Identifyable;
-
 public class Bank extends Customer
 {
     public Bank(double initialMoney)

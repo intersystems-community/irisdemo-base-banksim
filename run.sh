@@ -2,7 +2,7 @@
 
 amountDays=90
 amountEvents=3150000
-amountCustomers=100000
+amountCustomers=10
 pause=$1
 if [ -z "$pause" ];
 then

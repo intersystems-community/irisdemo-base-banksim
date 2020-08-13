@@ -1,8 +1,8 @@
 package com.irisdemo.banksim.model;
 
-import com.irisdemo.banksim.Identifyable;
+import java.util.LinkedList;
 
-public class Customer extends Identifyable
+public class Customer extends IdentifyableModel
 {
 
     private Account account;
@@ -10,7 +10,7 @@ public class Customer extends Identifyable
     private String state;
     private String city;
     private String phoneNumber;
-
+    private LinkedList<LoanContract> loanContracts = new LinkedList<LoanContract>();
     
     public Customer(String accountNumber, double initialMoney, String name, String state, String city, String phoneNumber)
     {
@@ -22,6 +22,22 @@ public class Customer extends Identifyable
         this.city = city;
 
         this.account = new Account(this, accountNumber, initialMoney);
+    }
+
+    public void registerNewLoan(LoanContract loanContract)
+    {
+        this.loanContracts.add(loanContract);
+    }
+
+    public boolean hasActiveLoan()
+    {
+        for (LoanContract contract: loanContracts)
+        {
+            if (contract.isActive())
+                return true;
+        }
+
+        return false;
     }
 
     public void displayInfo(boolean verbose)

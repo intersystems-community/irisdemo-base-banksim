@@ -1,9 +1,8 @@
 package com.irisdemo.banksim.model;
 
 import java.util.Calendar;
-import com.irisdemo.banksim.Identifyable;
 
-public class LoanContract extends Identifyable
+public class LoanContract extends IdentifyableModel
 {
 
     private Customer borrower;
@@ -11,18 +10,30 @@ public class LoanContract extends Identifyable
     private double contractAmount;
     private double paymentSize;
     private Bank bank;
-    private int dayDue;
+    private int dueDay;
+    private boolean paidAndComplete = false;
     
-    public LoanContract(Customer borrower, Bank bank, double contractAmount, int dayDue, double paymentSize)
+    public LoanContract(Customer borrower, Bank bank, double contractAmount, int dueDay, double paymentSize)
     {
         super();
 
         this.borrower=borrower;
+        this.borrower.registerNewLoan(this);
         this.amountOwed=contractAmount;
         this.contractAmount=contractAmount;
-        this.dayDue = dayDue;
+        this.dueDay = dueDay;
         this.paymentSize = paymentSize;
         this.bank = bank;
+    }
+
+    public void markAsPaidAndComplete()
+    {
+        this.paidAndComplete=true;
+    }
+
+    public boolean isActive()
+    {
+        return !paidAndComplete;
     }
 
     public double getContractAmount()
@@ -37,7 +48,7 @@ public class LoanContract extends Identifyable
 
     public boolean dueToday(Calendar currentCalendarDate)
     {
-        return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dayDue;
+        return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dueDay;
     }
 
     public void makePayment()
