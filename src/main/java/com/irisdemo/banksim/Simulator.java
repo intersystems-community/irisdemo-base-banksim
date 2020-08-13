@@ -25,7 +25,7 @@ public class Simulator
     private boolean dailyChecksRun = false;
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
-    private double probabilityLoanContract = .5;
+    private double probabilityLoanContract = .05;
     
 
     private CustomerDemographicsModule customerDemographicsModule;
