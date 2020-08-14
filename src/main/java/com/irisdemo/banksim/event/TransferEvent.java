@@ -26,31 +26,39 @@ public class TransferEvent extends Event
     public TransferEvent createInverse() throws Exception
     {
         TransferEvent inverseEvent;
-        
+        String inverseTransferType = null;
+
         switch (this.getTransferType())
         {
             case "TRANSFER_OUT":
-                inverseEvent = new TransferEvent(this.getEventDate(), "TRANSFER_IN", this.getOtherCustomer(), this.getCustomer(), -this.getAmount(), this.getReference());
+                inverseTransferType = "TRANSFER_IN";
                 break;
 
             case "TRANSFER_IN":
-                inverseEvent = new TransferEvent(this.getEventDate(), "TRANSFER_OUT", this.getOtherCustomer(), this.getCustomer(), -this.getAmount(), this.getReference());
+                inverseTransferType = "TRANSFER_OUT";
                 break;
 
             case "BANK_LOAN_IN":
-                inverseEvent = new TransferEvent(this.getEventDate(), "BANK_LOAN_OUT", this.getOtherCustomer(), this.getCustomer(), -this.getAmount(), this.getReference());
+                inverseTransferType = "BANK_LOAN_OUT";
                 break;
 
             case "BANK_LOAN_OUT":
-                inverseEvent = new TransferEvent(this.getEventDate(), "BANK_LOAN_IN", this.getOtherCustomer(), this.getCustomer(), -this.getAmount(), this.getReference());
+                inverseTransferType = "BANK_LOAN_IN";
                 break;
             
+            case "LOAN_PAYMENT_OUT":
+                inverseTransferType = "LOAN_PAYMENT_IN";
+                break;
+
+            case "LOAN_PAYMENT_IN":
+                inverseTransferType = "LOAN_PAYMENT_OUT";
+                break;
+
             default:
                 throw new Exception("Can not create inverse event for transfer type: " + this.getTransferType());
         }
 
-        return inverseEvent;
-        
+        return new TransferEvent(this.getEventDate(), inverseTransferType, this.getOtherCustomer(), this.getCustomer(), -this.getAmount(), this.getReference());        
     }
 
     public String getReference()
