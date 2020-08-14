@@ -23,7 +23,7 @@ public class TransferEvent extends Event
         this.reference = reference;
     }
 
-    public TransferEvent createInverse()
+    public TransferEvent createInverse() throws Exception
     {
         TransferEvent inverseEvent;
         
@@ -46,7 +46,7 @@ public class TransferEvent extends Event
                 break;
             
             default:
-                inverseEvent = null;
+                throw new Exception("Can not create inverse event for transfer type: " + this.getTransferType());
         }
 
         return inverseEvent;

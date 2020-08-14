@@ -76,7 +76,7 @@ public class Simulator
 
     }
 
-    public synchronized org.apache.avro.specific.SpecificRecordBase nextAvroEvent()
+    public synchronized org.apache.avro.specific.SpecificRecordBase nextAvroEvent() throws Exception
     {
         try
         {
@@ -86,9 +86,13 @@ public class Simulator
         {
             return null;
         }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
-    public synchronized Event next() 
+    public synchronized Event next() throws Exception
     {
         // Initialization events do not advance time and do not count as events of the simulation
         if (!initializationEventsQueue.isEmpty())
@@ -167,7 +171,7 @@ public class Simulator
     }
 
     // Starts a new day
-    public void newDay() 
+    public void newDay() throws Exception
     {        
         currentEventsDay = 0;
         currentCalendarDate.add(Calendar.DAY_OF_YEAR, 1);

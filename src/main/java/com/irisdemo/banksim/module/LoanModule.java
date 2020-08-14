@@ -23,7 +23,8 @@ public class LoanModule extends Module {
     private Integer[] loanLengths = { 3, 6, 9, 12, 18, 24 };
     private LinkedList<LoanContract> activeLoanContracts = new LinkedList<LoanContract>();
 
-    public void produceEvents() {
+    public void produceEvents() throws Exception
+    {
         Customer customer = null;
         Bank bank;
         LoanContract loanContract;
@@ -83,7 +84,7 @@ public class LoanModule extends Module {
         }
     }
 
-    public void dailyChecks() 
+    public void dailyChecks() throws Exception
     {
         LoanContract loanContract;
         TransferEvent paymentEventOut;

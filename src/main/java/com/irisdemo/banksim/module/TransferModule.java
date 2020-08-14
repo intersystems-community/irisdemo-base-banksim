@@ -14,7 +14,7 @@ public class TransferModule extends Module {
         super(simulator, probability);
     }
     
-    public void produceEvents()
+    public void produceEvents() throws Exception
     {
         Customer customer;
         Customer otherCustomer;

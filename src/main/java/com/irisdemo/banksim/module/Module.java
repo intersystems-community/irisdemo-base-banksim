@@ -14,9 +14,9 @@ public abstract class Module
         this.probability=probability;
     } 
     
-    public abstract void produceEvents();
+    public abstract void produceEvents() throws Exception;
 
-    public void dailyChecks()
+    public void dailyChecks() throws Exception
     {
         
     }

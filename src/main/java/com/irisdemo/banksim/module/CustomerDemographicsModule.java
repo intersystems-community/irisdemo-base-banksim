@@ -14,7 +14,7 @@ public class CustomerDemographicsModule extends Module
         super(simulator, probability);
     }
     
-    public void produceEvents()
+    public void produceEvents() throws Exception
     {
         Customer randomCustomer;
         Event event;

@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class App
 {
-    public static void main(String [] args)
+    public static void main(String [] args) throws Exception
     {
         int amountDays = Integer.parseInt(args[0]);
         int amountEvents = Integer.parseInt(args[1]);
