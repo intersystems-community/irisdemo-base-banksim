@@ -187,7 +187,7 @@ public class Simulator
 
         // verify if any loans have to be paid. This does not advance time. 
         // Many loan payment events will be queued with the same time as now
-        runDailyChecks();
+        checkForNewDayResetAndRunDailyChecks();
     }
 
     public Calendar getCurrentCalendarDate()
@@ -199,22 +199,22 @@ public class Simulator
     public void advanceTime() throws Exception
     {
         currentCalendarDate.add(Calendar.MILLISECOND, this.millisBetweenEvent);
+        checkForNewDayResetAndRunDailyChecks();
+    }
+
+    private void checkForNewDayResetAndRunDailyChecks() throws Exception
+    {
         int currentDay = currentCalendarDate.get(Calendar.DAY_OF_YEAR);
 
-        // change of day due to slowly increments in time
         if (lastDay!=currentDay)
         {
             lastDay = currentDay;
             currentEventsDay = 0;
-            runDailyChecks();
-        }
-    }
 
-    private void runDailyChecks() throws Exception
-    {
-        loanModule.dailyChecks();
-        customerDemographicsModule.dailyChecks();
-        transfersModule.dailyChecks();
+            loanModule.dailyChecks();
+            customerDemographicsModule.dailyChecks();
+            transfersModule.dailyChecks();
+        }
     }
 
     public Customer getRandomCustomer() {
