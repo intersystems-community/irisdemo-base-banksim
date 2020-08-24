@@ -14,7 +14,12 @@ import com.irisdemo.banksim.model.Bank;
 import com.irisdemo.banksim.model.Customer;
 import com.irisdemo.banksim.model.LoanContract;
 
-public class LoanModule extends Module {
+public class LoanModule extends Module 
+{
+
+    protected long closedContracts = 0;
+    protected long loanContractsCreated = 0;
+    protected long loanPayments = 0;
 
     public LoanModule(Simulator simulator, double probability) {
         super(simulator, probability);
@@ -68,6 +73,7 @@ public class LoanModule extends Module {
             dueDate.add(Calendar.DAY_OF_YEAR,1);
             loanContract = new LoanContract(customer, bank, amount, dueDate.get(Calendar.DAY_OF_MONTH), paymentSize);
             activeLoanContracts.add(loanContract);
+            loanContractsCreated++;
 
             loanContractEvent = new LoanContractEvent(simulator.getCurrentCalendarDate(), loanContract);
 
@@ -81,6 +87,7 @@ public class LoanModule extends Module {
             simulator.queueEvent(loanContractEvent);
             simulator.queueEvent(transferEventOut);
             simulator.queueEvent(transferEventIn);
+            eventCount+=3;
         }
     }
 
@@ -99,20 +106,22 @@ public class LoanModule extends Module {
             
             if (loanContract.dueToday(simulator.getCurrentCalendarDate()))
             {
-                //com.irisdemo.App.pause("\n\nactiveLoanContracts: Due!");
-
                 loanContract.makePayment();
 
                 // ADD LOAN PAYMENT EVENT TO EVENT QUEUE
                 paymentEventOut = new TransferEvent(simulator.getCurrentCalendarDate(), "LOAN_PAYMENT_OUT", loanContract.getBorrower(), simulator.getBank(), -loanContract.getPaymentSize(), loanContract.getReference());
-                simulator.queueEvent(paymentEventOut);                    
+                simulator.queueEvent(paymentEventOut);  
+                eventCount++;
+                loanPayments++; 
 
                 paymentEventIn = paymentEventOut.createInverse();
-                simulator.queueEvent(paymentEventIn);                    
+                simulator.queueEvent(paymentEventIn);
+                eventCount++;
 
                 // if the loanContract has been succesfully paid off, remove it from the activeLoanContracts Linked List
                 if (loanContract.isComplete()) 
                 {
+                    closedContracts++;
                     loanContract.markAsPaidAndComplete();
                     loanIterator.remove();
                 }
@@ -120,4 +129,16 @@ public class LoanModule extends Module {
             }
         }
     }
+
+    public void printCounts()
+    {
+        System.out.println("\n------------------------------------------\rLoan Contracts: ");
+        System.out.println("Loans created so far : " + this.loanContractsCreated);
+        System.out.println("Events created so far: " + this.eventCount);
+        System.out.println("Active Loans so far  : " + activeLoanContracts.size());
+        System.out.println("Loan payments so far : " + loanPayments);
+        System.out.println("Closed Loans so far  : " + closedContracts);
+        
+    }
+
 }

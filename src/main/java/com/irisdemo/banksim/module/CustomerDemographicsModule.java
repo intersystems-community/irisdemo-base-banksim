@@ -39,9 +39,10 @@ public class CustomerDemographicsModule extends Module
                     randomCustomer.setPhoneNumber(Util.getRandomPhoneNumber());
                     break;    
             }
-    
+            
             event = new DemographicsEvent(this.simulator.getCurrentCalendarDate(), randomCustomer);
             simulator.queueEvent(event);
+            eventCount++;
         }
     }
 
@@ -50,4 +51,10 @@ public class CustomerDemographicsModule extends Module
         //Nothing to be done here
     }
     
+    public void printCounts()
+    {
+        System.out.println("\n------------------------------------------\rCustomer Demographics: ");
+        System.out.println("Events created so far: " + this.eventCount);
+    }
+
 }

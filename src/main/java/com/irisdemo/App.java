@@ -36,7 +36,8 @@ public class App
                 currentDay = event.getEventDate().get(Calendar.DAY_OF_YEAR);
                 if (pauseInBetweenDays.equals("pause"))
                 {
-                    pause("Queue size: " + simulator.queueSize());
+                    simulator.printStats();
+                    pause();
                 }
             }
 

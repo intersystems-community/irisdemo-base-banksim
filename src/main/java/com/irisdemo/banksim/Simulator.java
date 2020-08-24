@@ -15,6 +15,8 @@ public class Simulator
     private Bank bank;
     
     private Calendar currentCalendarDate;
+    private int lastDay;
+
     private int maxEventsPerDay;
     private int totalEvents;
     private int maxNumberOfEvents;
@@ -24,7 +26,7 @@ public class Simulator
     private LinkedList<Event> eventQueue = new LinkedList<>();
     private double probabilityTransfer = .45;
     private double probabilityDemographics = .20;
-    private double probabilityLoanContract = .05;
+    private double probabilityLoanContract = .1;
     
 
     private CustomerDemographicsModule customerDemographicsModule;
@@ -175,7 +177,7 @@ public class Simulator
     {
         return eventQueue.size();
     }
-    
+
     // Starts a new day
     public void newDay() throws Exception
     {        
@@ -185,10 +187,7 @@ public class Simulator
 
         // verify if any loans have to be paid. This does not advance time. 
         // Many loan payment events will be queued with the same time as now
-
-        loanModule.dailyChecks();
-        customerDemographicsModule.dailyChecks();
-        transfersModule.dailyChecks();
+        runDailyChecks();
     }
 
     public Calendar getCurrentCalendarDate()
@@ -197,9 +196,25 @@ public class Simulator
     }
 
     // advance time in current day
-    public void advanceTime() 
+    public void advanceTime() throws Exception
     {
         currentCalendarDate.add(Calendar.MILLISECOND, this.millisBetweenEvent);
+        int currentDay = currentCalendarDate.get(Calendar.DAY_OF_YEAR);
+
+        // change of day due to slowly increments in time
+        if (lastDay!=currentDay)
+        {
+            lastDay = currentDay;
+            currentEventsDay = 0;
+            runDailyChecks();
+        }
+    }
+
+    private void runDailyChecks() throws Exception
+    {
+        loanModule.dailyChecks();
+        customerDemographicsModule.dailyChecks();
+        transfersModule.dailyChecks();
     }
 
     public Customer getRandomCustomer() {
@@ -209,6 +224,19 @@ public class Simulator
     public Bank getBank()
     {
         return this.bank;
+    }
+
+    public void printStats()
+    {
+        System.out.println("\n******************************************\rModule Stats: ");
+        System.out.println("\n------------------------------------------\rEvent Queue Size: ");
+        System.out.println("Events queued for next day: " + this.queueSize());
+
+        loanModule.printCounts();
+
+        customerDemographicsModule.printCounts();
+        
+        transfersModule.printCounts();
     }
 
 

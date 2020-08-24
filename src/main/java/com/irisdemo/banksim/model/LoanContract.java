@@ -48,7 +48,7 @@ public class LoanContract extends IdentifyableModel
 
     public boolean dueToday(Calendar currentCalendarDate)
     {
-        return currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dueDay;
+        return (currentCalendarDate.get(Calendar.DAY_OF_MONTH) == this.dueDay);
     }
 
     public void makePayment()

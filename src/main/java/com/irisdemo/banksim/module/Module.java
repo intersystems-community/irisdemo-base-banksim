@@ -7,6 +7,7 @@ public abstract class Module
 {
     protected double probability;
     protected Simulator simulator;
+    protected long eventCount = 0;
 
     public Module(Simulator simulator, double probability)
     {
@@ -18,4 +19,5 @@ public abstract class Module
 
     public abstract void dailyChecks() throws Exception;
 
+    public abstract void printCounts();
 }

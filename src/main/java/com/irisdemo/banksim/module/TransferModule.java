@@ -42,6 +42,7 @@ public class TransferModule extends Module {
             
             simulator.queueEvent(transferEventOut);
             simulator.queueEvent(transferEventIn);
+            eventCount+=2;
         }
     }
 
@@ -50,4 +51,9 @@ public class TransferModule extends Module {
         //Nothing to be done here
     }
 
+    public void printCounts()
+    {
+        System.out.println("\n------------------------------------------\rTransfers: ");
+        System.out.println("Events created so far: " + this.eventCount);
+    }
 }

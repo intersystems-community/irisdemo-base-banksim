@@ -1,8 +1,8 @@
 #!/bin/bash
 
-amountDays=60
-amountEvents=3500000
-amountCustomers=50000
+amountDays=365
+amountEvents=100000
+amountCustomers=1000
 pause=$1
 if [ -z "$pause" ];
 then
