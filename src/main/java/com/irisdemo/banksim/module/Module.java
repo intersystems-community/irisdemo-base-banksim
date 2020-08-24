@@ -16,9 +16,6 @@ public abstract class Module
     
     public abstract void produceEvents() throws Exception;
 
-    public void dailyChecks() throws Exception
-    {
-        
-    }
+    public abstract void dailyChecks() throws Exception;
 
 }

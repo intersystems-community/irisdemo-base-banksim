@@ -45,5 +45,9 @@ public class TransferModule extends Module {
         }
     }
 
-    
+    public void dailyChecks() throws Exception
+    {
+        //Nothing to be done here
+    }
+
 }

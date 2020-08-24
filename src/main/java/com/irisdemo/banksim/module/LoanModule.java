@@ -96,10 +96,11 @@ public class LoanModule extends Module {
         while (loanIterator.hasNext()) 
         {
             loanContract = loanIterator.next();
-
+            
             if (loanContract.dueToday(simulator.getCurrentCalendarDate()))
             {
-    
+                //com.irisdemo.App.pause("\n\nactiveLoanContracts: Due!");
+
                 loanContract.makePayment();
 
                 // ADD LOAN PAYMENT EVENT TO EVENT QUEUE

@@ -45,5 +45,9 @@ public class CustomerDemographicsModule extends Module
         }
     }
 
+    public void dailyChecks() throws Exception
+    {
+        //Nothing to be done here
+    }
     
 }

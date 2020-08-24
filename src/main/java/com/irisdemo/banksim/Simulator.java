@@ -97,7 +97,7 @@ public class Simulator
         // Initialization events do not advance time and do not count as events of the simulation
         if (!initializationEventsQueue.isEmpty())
         {
-            return initializationEventsQueue.pop();
+            return initializationEventsQueue.removeFirst();
         }
 
         // Base case. Return null if we have already finished the total
@@ -115,7 +115,7 @@ public class Simulator
         {
             totalEvents++;
             currentEventsDay++;
-            return eventQueue.pop();
+            return eventQueue.removeFirst();
         }
 
         // Now that we have delivered all loan payments for the day, we can start doing normal transactions and let time flow
@@ -167,9 +167,15 @@ public class Simulator
 
     public void queueEvent(Event event)
     {
-        eventQueue.add(event);
+        // Adds to the end of the list
+        eventQueue.addLast(event);
     }
 
+    public int queueSize()
+    {
+        return eventQueue.size();
+    }
+    
     // Starts a new day
     public void newDay() throws Exception
     {        
